@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157008798061",
+    "project_id": "voztify",
+    "storage_bucket": "voztify.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157008798061:android:bdcb64dd7a0fff88dcfa64",
+        "android_client_info": {
+          "package_name": "nhom2.voztify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsBmf8YktXa0RrVsiFHBABVkCu7wFi66o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
