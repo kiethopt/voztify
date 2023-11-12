@@ -16,6 +16,15 @@
         android:theme="@style/Theme.Voztify"
         tools:targetApi="31">
         <activity
+            android:name=".ExploreFragment"
+            android:exported="false" />
+        <activity
+            android:name=".HomeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
