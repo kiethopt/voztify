@@ -33,6 +33,7 @@ public class ExploreFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
+
         return view;
     }
 
