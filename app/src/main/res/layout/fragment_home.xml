@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#040D12"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Upper section containing username, name, and bio -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Left side containing username, name, and bio -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/usernameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="@username" />
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="40dp"
+                android:text="Name" />
+
+            <TextView
+                android:id="@+id/bioTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp"
+                android:text="Bio" />
+
+        </LinearLayout>
+
+        <!-- Right side containing circular profile image -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="50dp"
+            android:elevation="10dp">
+
+            <ImageView
+                android:id="@+id/profilePhoto"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="0.5"
+                android:longClickable="true"
+                app:srcCompat="@drawable/voztify" />
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <!-- Lower section containing user information -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <!-- Edit profile -->
+        <ImageView
+            android:id="@+id/editProfileImageView"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_edit_24"
+            android:background="@drawable/frame_border"
+            android:layout_marginEnd="16dp" />
+
+        <ImageView
+            android:id="@+id/dateJoinedImageView"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_calendar_month_24"
+            android:background="@drawable/frame_border"
+             />
+        <!-- Date joined -->
+        <TextView
+            android:id="@+id/dateJoinedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="20dp"
+            android:text="Joined on" />
+
+        <ImageView
+            android:id="@+id/followersCountImageView"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_remove_red_eye_24"
+            android:background="@drawable/frame_border" />
+
+        <!-- Followers count -->
+        <TextView
+            android:id="@+id/followersCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:text="Following" />
+
+    </LinearLayout>
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="#040D12">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <!-- TextView1 -->
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#5C8374"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:text="Top genres" />
+
+            <!-- ListView1 -->
+            <ListView
+                android:id="@+id/listView1"
+                android:layout_width="match_parent"
+                android:background="#808080"
+                android:layout_marginTop="5dp"
+                android:layout_height="130dp"
+                android:divider="#FFFFFF"
+                android:dividerHeight="1dp" />
+
+            <!-- TextView2 -->
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="#5C8374"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:text="Top artists" />
+
+            <!-- ListView2 -->
+            <ListView
+                android:id="@+id/listView2"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="5dp"
+                android:background="#808080"
+                android:divider="#FFFFFF"
+                android:dividerHeight="1dp" />
+            <!-- TextView3 -->
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#5C8374"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:text="Top tracks" />
+
+            <!-- ListView3 -->
+            <ListView
+                android:id="@+id/listView3"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="5dp"
+                android:background="#808080"
+                android:divider="#FFFFFF"
+                android:dividerHeight="1dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

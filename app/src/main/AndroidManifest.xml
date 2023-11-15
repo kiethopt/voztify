@@ -16,15 +16,6 @@
         android:theme="@style/Theme.Voztify"
         tools:targetApi="31">
         <activity
-            android:name=".SignUp"
-            android:exported="false" />
-        <activity
-            android:name=".Register"
-            android:exported="false" />
-        <activity
-            android:name=".Login"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
