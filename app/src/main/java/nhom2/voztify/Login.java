@@ -81,7 +81,7 @@ public class Login extends AppCompatActivity {
                     if(task.isSuccessful())
                     {
                         Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Login.this , MainActivity.class));
+                        startActivity(new Intent(Login.this , HomeActivity.class));
                         finish();
                     }
                     else
