@@ -1,10 +1,19 @@
-<!-- fragment_ban_nhac.xml -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Bản nhạc fragment" />
-</RelativeLayout>
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:background="#040D12"
+        android:numColumns="2"
+        android:columnWidth="200dp"
+        android:gravity="center"
+        android:horizontalSpacing="8dp"
+        android:verticalSpacing="8dp" />
+</LinearLayout>
