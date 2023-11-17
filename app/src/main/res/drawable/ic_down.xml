@@ -1,0 +1,11 @@
+<!-- res/drawable/ic_arrow_down.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+    <!-- Customize the vector drawable for the downward arrow -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12 20l-12-12 2-2 10 10 10-10 2 2" />
+</vector>

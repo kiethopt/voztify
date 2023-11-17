@@ -1,6 +1,7 @@
 package nhom2.voztify;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +46,25 @@ public class TabViewSongsFragment extends Fragment {
         songList.add(new Song("Song 10", "Artist 10", "https://i.scdn.co/image/ab67616d00001e0207572fc88208da4e900a2fe4"));
         // Add more songs here
 
+        context = getContext();
 
-        songAdapter = new SongAdapter(requireContext(), songList);
+        SongAdapter songAdapter = new SongAdapter(context, songList, new SongAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Song song = songList.get(position);
 
+                Intent intent = new Intent(context, PlayMusicActivity.class);
+                intent.putExtra("SONG_TITLE", song.getTitle());
+                intent.putExtra("SONG_ARTIST", song.getArtist());
+                intent.putExtra("SONG_IMAGE", song.getImage());
+
+                context.startActivity(intent);
+            }
+        });
+
+        recyclerView.setAdapter(songAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(songAdapter);
 
         return view;
     }

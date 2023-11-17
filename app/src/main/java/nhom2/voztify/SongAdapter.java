@@ -1,11 +1,15 @@
 package nhom2.voztify;
 
+import static java.security.AccessController.getContext;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,14 +20,25 @@ import java.util.List;
 
 import nhom2.voztify.Class.Song;
 
+
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     private Context context;
     private List<Song> songs;
+    private OnItemClickListener onItemClickListener;
 
-    public SongAdapter(Context context, List<Song> songs) {
+    public SongAdapter(Context context, List<Song> songs, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.songs = songs;
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     @NonNull
@@ -34,7 +49,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if (songs == null || songs.isEmpty()) {
             return;
         }
@@ -46,6 +61,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                 .load(song.getImage())
                 .placeholder(R.drawable.placeholder_img)
                 .into(holder.songImage);
+
+        // Set click listener
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, position);
+                }
+            }
+        });
     }
 
     @Override
