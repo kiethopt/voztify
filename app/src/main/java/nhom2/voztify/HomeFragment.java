@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +23,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import nhom2.voztify.Class.SpotifyApi;
 
 public class HomeFragment extends Fragment {
 
@@ -52,6 +67,8 @@ public class HomeFragment extends Fragment {
         bioTextView = view.findViewById(R.id.bioTextView);
         profilePhoto = view.findViewById(R.id.profilePhoto);
 
+        fetchTopGenres();
+
         // Xóa dữ liệu cũ từ SharedPreferences
         clearSharedPreferences();
 
@@ -74,6 +91,71 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+    // ============================== TOP GENRES - API =================================
+    private void fetchTopGenres() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String accessToken = SpotifyApi.getAccessToken();
+                if (accessToken != null) {
+                    try {
+                        URL url = new URL("https://api.spotify.com/v1/browse/categories");
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("GET");
+                        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+                        int responseCode = conn.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                            String inputLine;
+                            StringBuilder response = new StringBuilder();
+                            while ((inputLine = in.readLine()) != null) {
+                                response.append(inputLine);
+                            }
+                            in.close();
+
+                            // Parse JSON and get genres
+                            List<String> genres = parseGenres(response.toString());
+
+                            // Update ListView on UI thread
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateListView(genres);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private List<String> parseGenres(String json) {
+        List<String> genres = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray categories = jsonObject.getJSONObject("categories").getJSONArray("items");
+            for (int i = 0; i < categories.length(); i++) {
+                String genre = categories.getJSONObject(i).getString("name");
+                genres.add(genre);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return genres;
+    }
+
+    private void updateListView(List<String> genres) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, genres);
+        ListView listView = getView().findViewById(R.id.lvTopGenres);
+        listView.setAdapter(adapter);
+    }
+
+    // ===============================================================================
 
     // Thêm phương thức để xóa dữ liệu từ SharedPreferences
     private void clearSharedPreferences() {
