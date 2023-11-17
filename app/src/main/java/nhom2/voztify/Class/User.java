@@ -1,5 +1,8 @@
 package nhom2.voztify.Class;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class User {
     private String id;
     private String email;
@@ -8,8 +11,9 @@ public class User {
     private String birth;
     private String gender;
     private String password;
-    private String avatarUrl;
-
+    private String bio;
+    private String joinedOn;
+    private int followingCount;
 
     public String getId() {
         return id;
@@ -67,35 +71,49 @@ public class User {
         this.password = password;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+
+    public String getBio() {
+        return bio;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
-    public User( String email, String name, String phoneNum, String birth, String gender, String password) {
+    public String getJoinedOn() {
+        return joinedOn;
+    }
+
+    public void setJoinedOn(String joinedOn) {
+        this.joinedOn = joinedOn;
+    }
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(int followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public User(String email, String name, String phoneNum, String birth, String gender, String password) {
         this.email = email;
         this.name = name;
         this.phoneNum = phoneNum;
         this.birth = birth;
         this.gender = gender;
         this.password = password;
+        this.bio = "";
+        this.joinedOn = getCurrentDate();
+        this.followingCount = 0;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phoneNum + '\'' +
-                ", birthday='" + birth + '\'' +
-                ", gender='" + gender + '\'' +
-                ", password='" + password + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' + // New field
-                '}';
+    public User() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(){}
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(Calendar.getInstance().getTime());
+    }
 }

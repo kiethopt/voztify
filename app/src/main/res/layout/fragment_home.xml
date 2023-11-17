@@ -22,13 +22,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/usernameTextView"
+                android:id="@+id/emailTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="18dp"
-                android:text="@username" />
+                android:text="email" />
 
             <TextView
                 android:id="@+id/nameTextView"
@@ -94,11 +94,10 @@
             android:id="@+id/dateJoinedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="20dp"
-            android:text="Joined on" />
+            android:textColor="#FFFFFF" />
 
         <ImageView
             android:id="@+id/followersCountImageView"

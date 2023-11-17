@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#040D12"
+    android:padding="16dp"
+    tools:context=".EditProfileActivity">
+
+    <ImageView
+        android:id="@+id/closeIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_close_24"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:id="@+id/frame1"
+        android:layout_centerHorizontal="true">
+
+        <!-- CardView để chứa hình ảnh -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="100dp"
+            android:id="@+id/cardview"
+            android:elevation="10dp">
+
+            <ImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_weight="0.5"
+                android:longClickable="true"
+                app:srcCompat="@drawable/voztify" />
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frame1"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        android:textColorHint="#F00"
+        app:startIconDrawable="@drawable/baseline_email_24"
+        app:startIconContentDescription="Email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:inputType="none"
+            android:focusable="false"
+            android:background="@drawable/backgroundforedt2"
+            android:padding="8dp"
+            android:drawablePadding="8dp"
+            android:layout_marginBottom="16dp"
+            android:hint="Email" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailInputLayout"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        android:textColorHint="#F00"
+        app:boxCornerRadiusTopStart="16dp"
+        app:startIconDrawable="@drawable/baseline_person_24"
+        app:startIconContentDescription="Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:inputType="text"
+            android:background="@drawable/backgroundforedt"
+            android:padding="10dp"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="16dp"
+            android:hint="Name"
+            android:maxLength="20"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/bioInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameInputLayout"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        android:textColorHint="#F00"
+        app:startIconDrawable="@drawable/baseline_info_24"
+        app:startIconContentDescription="Bio">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bioEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:inputType="text"
+            android:background="@drawable/backgroundforedt"
+            android:padding="10dp"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="16dp"
+            android:hint="Bio"
+            android:maxLength="30"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneNumInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bioInputLayout"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        android:textColorHint="#F00"
+        app:startIconDrawable="@drawable/baseline_phone_24"
+        app:startIconContentDescription="Phone Number">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneNumEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:inputType="phone"
+            android:background="@drawable/backgroundforedt"
+            android:padding="10dp"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="16dp"
+            android:hint="Phone Number"
+            android:maxLength="12"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/birthInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phoneNumInputLayout"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        android:textColorHint="#F00"
+        app:startIconDrawable="@drawable/baseline_edit_calendar_24"
+        app:startIconContentDescription="Birth Date">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/birthEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:inputType="none"
+            android:background="@drawable/backgroundforedt"
+            android:padding="10dp"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="16dp"
+            android:hint="Birth Date" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/birthInputLayout"
+        android:id="@+id/linearforspinner"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_transgender_24"
+            android:background="@drawable/backgroundforedt3"
+            android:paddingStart="13dp"
+            android:paddingEnd="8dp"
+            android:padding="10dp"/>
+
+        <Spinner
+            android:id="@+id/genderSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Gender"
+            android:padding="11dp"
+            android:background="@drawable/backgroundforedt4"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/saveChangesButton"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/linearforspinner"
+        android:layout_marginTop="24dp"
+        android:text="SAVE CHANGES"
+        android:textColor="#FFFFFF"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
