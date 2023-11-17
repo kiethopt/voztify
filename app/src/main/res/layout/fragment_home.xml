@@ -129,9 +129,9 @@
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-            <!-- TextView1 -->
+            <!-- TextView Top Genres -->
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/tvTopGenres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#5C8374"
@@ -139,9 +139,9 @@
                 android:textStyle="bold"
                 android:text="Top genres" />
 
-            <!-- ListView1 -->
+            <!-- ListView Top Genres -->
             <ListView
-                android:id="@+id/listView1"
+                android:id="@+id/lvTopGenres"
                 android:layout_width="match_parent"
                 android:background="#808080"
                 android:layout_marginTop="5dp"
@@ -149,9 +149,9 @@
                 android:divider="#FFFFFF"
                 android:dividerHeight="1dp" />
 
-            <!-- TextView2 -->
+            <!-- TextView Top Artists -->
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvTopArtists"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -160,18 +160,19 @@
                 android:textStyle="bold"
                 android:text="Top artists" />
 
-            <!-- ListView2 -->
+            <!-- ListView Top Artists -->
             <ListView
-                android:id="@+id/listView2"
+                android:id="@+id/lvTopArtists"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:layout_marginTop="5dp"
                 android:background="#808080"
                 android:divider="#FFFFFF"
                 android:dividerHeight="1dp" />
-            <!-- TextView3 -->
+
+            <!-- TextView Top Tracks -->
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/tvTopTracks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#5C8374"
@@ -180,9 +181,9 @@
                 android:textSize="18dp"
                 android:text="Top tracks" />
 
-            <!-- ListView3 -->
+            <!-- ListView Top Tracks -->
             <ListView
-                android:id="@+id/listView3"
+                android:id="@+id/lvTopTracks"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:layout_marginTop="5dp"
