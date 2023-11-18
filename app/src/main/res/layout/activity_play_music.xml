@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="13dp"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="10dp">
         <ImageButton
             android:id="@+id/minimizeButton"
             android:layout_width="46dp"
