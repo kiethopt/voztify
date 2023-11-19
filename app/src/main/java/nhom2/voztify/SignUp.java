@@ -15,14 +15,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,13 +41,28 @@ public class SignUp extends AppCompatActivity {
     FirebaseAuth mAuth;
     public User users;
     public String gend;
+    Toolbar toolbar;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
+        toolbar = findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
+        // Tắt tiêu đề mặc định của ActionBar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // Hiển thị nút back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Set custom drawable as the navigation icon
+        toolbar.setNavigationIcon(R.drawable.outline_arrow_back_ios_24);
+        // Xử lý sự kiện khi nút back được nhấn
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         // Tìm ID cho các thành phần giao diện người dùng
         edtMail = findViewById(R.id.edtMail);
         edtCreatePass = findViewById(R.id.edtCreatePass);
@@ -110,8 +129,13 @@ public class SignUp extends AppCompatActivity {
 
         datePickerDialog.show();
     }
-
-    // Đăng ký tài khoản
+    // Xử lý sự kiện khi nút back được nhấn
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+    // Xử lý sự kiện Đăng ký tài khoản
     public void signUp() {
         String email = edtMail.getText().toString();
         String password = edtCreatePass.getText().toString();
@@ -133,21 +157,42 @@ public class SignUp extends AppCompatActivity {
             Toast.makeText(SignUp.this, "Confirm Password Wrong !!!", Toast.LENGTH_SHORT).show();
             edtConfirmPass.requestFocus();
         } else {
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        users = new User(email, name, phone, birthDate, gend, password);
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).setValue(users);
-
-                        Toast.makeText(SignUp.this, "Đăng ký tài khoản thành công!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignUp.this, Login.class));
-                    } else {
-                        Toast.makeText(SignUp.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+           checkPhoneNumberExists(phone,email, password, name,birthDate);
         }
+    }
+
+    private void checkPhoneNumberExists(String phone, String email, String password, String name, String birthDate){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+
+        databaseReference.orderByChild("phoneNum").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Phone number is already in use
+                    Toast.makeText(SignUp.this, "Phone number is already in use", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                users = new User(email, name, phone, birthDate, gend, password);
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).setValue(users);
+
+                                Toast.makeText(SignUp.this, "Create Account Success !!!", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(SignUp.this, Login.class));
+                            } else {
+                                Toast.makeText(SignUp.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

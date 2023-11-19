@@ -28,6 +28,9 @@
             android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".Setting"
+            android:exported="false" />
+        <activity
             android:name=".ExploreFragment"
             android:exported="false" />
         <activity

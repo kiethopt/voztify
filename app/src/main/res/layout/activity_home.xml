@@ -37,6 +37,7 @@
         android:layout_weight="1"/>
 
     <!-- Bottom Navigation View -->
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:background="#040D12"

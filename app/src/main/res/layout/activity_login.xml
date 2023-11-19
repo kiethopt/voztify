@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="top"
     tools:context=".Login">
 
     <androidx.appcompat.widget.Toolbar

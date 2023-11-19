@@ -2,15 +2,23 @@ package nhom2.voztify;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +56,10 @@ public class HomeActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
         }
+
+
+
+
     }
 
     private void loadFragment(Fragment fragment) {
@@ -56,4 +68,8 @@ public class HomeActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+    //Setting
+
+
 }
