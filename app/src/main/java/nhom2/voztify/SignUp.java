@@ -182,6 +182,7 @@ public class SignUp extends AppCompatActivity {
 
                                 Toast.makeText(SignUp.this, "Create Account Success !!!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(SignUp.this, Login.class));
+                                finish();
                             } else {
                                 Toast.makeText(SignUp.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             }

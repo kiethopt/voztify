@@ -80,13 +80,13 @@ public class Login extends AppCompatActivity {
                 {
                     if(task.isSuccessful())
                     {
-                        Toast.makeText(Login.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Log in Success!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Login.this , HomeActivity.class));
                         finish();
                     }
                     else
                     {
-                        Toast.makeText(Login.this, "Đăng nhập không thành công"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Log in Fails"+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
