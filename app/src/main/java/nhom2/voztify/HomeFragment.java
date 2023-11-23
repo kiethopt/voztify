@@ -149,9 +149,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateListView(List<String> genres) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, genres);
-        ListView listView = getView().findViewById(R.id.lvTopGenres);
-        listView.setAdapter(adapter);
+        if (getView() != null) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, genres);
+            ListView listView = getView().findViewById(R.id.lvTopGenres);
+            if (listView != null) {
+                listView.setAdapter(adapter);
+            } else {
+                Log.e("HomeFragment", "ListView is null");
+            }
+        } else {
+            Log.e("HomeFragment", "Fragment's view is null");
+        }
     }
 
     // ===============================================================================
