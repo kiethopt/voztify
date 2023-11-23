@@ -12,8 +12,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -24,6 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Voztify"
         tools:targetApi="31">
+        <activity
+            android:name=".PlayMusicActivity"
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -37,7 +38,7 @@
             android:name=".HomeFragment"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".SplashActivity"
             android:exported="false" />
         <activity
             android:name=".SignUp"
@@ -46,13 +47,13 @@
             android:name=".Register"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

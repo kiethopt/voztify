@@ -1,9 +1,10 @@
 package nhom2.voztify;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 
 public class PlayMusicActivity extends AppCompatActivity {
 
@@ -18,7 +19,6 @@ public class PlayMusicActivity extends AppCompatActivity {
             String songTitle = intent.getStringExtra("SONG_TITLE");
             String songArtist = intent.getStringExtra("SONG_ARTIST");
             String songImage = intent.getStringExtra("SONG_IMAGE");
-
 
         }
     }

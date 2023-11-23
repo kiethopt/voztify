@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import nhom2.voztify.Class.Artist;
-import nhom2.voztify.Class.Song;
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder> {
 

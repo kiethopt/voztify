@@ -1,7 +1,5 @@
 package nhom2.voztify;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,18 +15,18 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import nhom2.voztify.Class.Song;
+import nhom2.voztify.Class.Track;
 
 
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
+public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> {
 
     private Context context;
-    private List<Song> songs;
+    private List<Track> tracks;
     private OnItemClickListener onItemClickListener;
 
-    public SongAdapter(Context context, List<Song> songs, OnItemClickListener onItemClickListener) {
+    public TrackAdapter(Context context, List<Track> tracks, OnItemClickListener onItemClickListener) {
         this.context = context;
-        this.songs = songs;
+        this.tracks = tracks;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -44,21 +41,21 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.song_recycler_grid_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.track_recycler_grid_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        if (songs == null || songs.isEmpty()) {
+        if (tracks == null || tracks.isEmpty()) {
             return;
         }
 
-        Song song = songs.get(position);
-        holder.songTitle.setText(song.getTitle());
-        holder.songArtist.setText(song.getArtist());
+        Track track = tracks.get(position);
+        holder.songTitle.setText(track.getTitle());
+        holder.songArtist.setText(track.getArtist().getName());
         Picasso.get()
-                .load(song.getImage())
+                .load(track.getAlbum().getCover_medium())
                 .placeholder(R.drawable.placeholder_img)
                 .into(holder.songImage);
 
@@ -75,7 +72,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return songs != null ? songs.size() : 0;
+        return tracks.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
