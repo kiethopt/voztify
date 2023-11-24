@@ -31,14 +31,14 @@ public class TabViewArtistsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tab_view_artists, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
 
-        artistList = new ArrayList<>();
-        artistList.add(new Artist("Wren Evans", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
-        artistList.add(new Artist("Wren Evans1", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
-        artistList.add(new Artist("Wren Evans2", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
-        artistList.add(new Artist("Wren Evans3", "https://i.scdn.co/image/ab6761610000f17837b110af3f232710b8f14a97"));
-        artistList.add(new Artist("Wren Evans4", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
-        artistList.add(new Artist("Wren Evans5", "https://i.scdn.co/image/ab6761610000f17837b110af3f232710b8f14a97"));
-        artistList.add(new Artist("Wren Evans6", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
+//        artistList = new ArrayList<>();
+//        artistList.add(new Artist("Wren Evans", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
+//        artistList.add(new Artist("Wren Evans1", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
+//        artistList.add(new Artist("Wren Evans2", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
+//        artistList.add(new Artist("Wren Evans3", "https://i.scdn.co/image/ab6761610000f17837b110af3f232710b8f14a97"));
+//        artistList.add(new Artist("Wren Evans4", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
+//        artistList.add(new Artist("Wren Evans5", "https://i.scdn.co/image/ab6761610000f17837b110af3f232710b8f14a97"));
+//        artistList.add(new Artist("Wren Evans6", "https://i.scdn.co/image/ab6761610000f178cbc6b072aec429273fdbd53b"));
 
         // Add more songs here
         artistAdapter = new ArtistAdapter(requireContext(), artistList);

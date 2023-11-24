@@ -30,6 +30,7 @@ public class Track {
     @SerializedName("album")
     private Album album;
 
+
     // Các getter và setter cho mỗi trường
     public String getId() {
         return id;
@@ -113,41 +114,6 @@ public class Track {
 
         public void setName(String name) {
             this.name = name;
-        }
-    }
-
-    public static class Album {
-        @SerializedName("cover_small")
-        private String cover_small;
-
-        @SerializedName("cover_medium")
-        private String cover_medium;
-
-        @SerializedName("cover_big")
-        private String cover_big;
-
-        public String getCover_small() {
-            return cover_small;
-        }
-
-        public void setCover_small(String cover_small) {
-            this.cover_small = cover_small;
-        }
-
-        public String getCover_medium() {
-            return cover_medium;
-        }
-
-        public void setCover_medium(String cover_medium) {
-            this.cover_medium = cover_medium;
-        }
-
-        public String getCover_big() {
-            return cover_big;
-        }
-
-        public void setCover_big(String cover_big) {
-            this.cover_big = cover_big;
         }
     }
 

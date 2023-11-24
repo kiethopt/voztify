@@ -30,6 +30,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void updateTracks(List<Track> newTracks) {
+        this.tracks = newTracks;
+        notifyDataSetChanged();
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -53,22 +58,29 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
 
         Track track = tracks.get(position);
         holder.songTitle.setText(track.getTitle());
-        holder.songArtist.setText(track.getArtist().getName());
-        Picasso.get()
-                .load(track.getAlbum().getCover_medium())
-                .placeholder(R.drawable.placeholder_img)
-                .into(holder.songImage);
 
-        // Set click listener
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, position);
-                }
-            }
-        });
+        // Check if the artist is not null
+        if (track.getArtist() != null) {
+            holder.songArtist.setText(track.getArtist().getName());
+        } else {
+            holder.songArtist.setText(""); // Or set a default value
+        }
+
+        // Check if the album and cover_medium are not null
+        if (track.getAlbum() != null && track.getAlbum().getCover_medium() != null) {
+            Picasso.get()
+                    .load(track.getAlbum().getCover_medium())
+                    .placeholder(R.drawable.placeholder_img)
+                    .into(holder.songImage);
+        } else {
+            // Handle case where cover_medium is null
+            // For example, set a default image
+            Picasso.get()
+                    .load(R.drawable.placeholder_img)
+                    .into(holder.songImage);
+        }
     }
+
 
     @Override
     public int getItemCount() {

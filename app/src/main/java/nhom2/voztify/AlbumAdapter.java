@@ -14,52 +14,53 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import nhom2.voztify.Class.Artist;
+import nhom2.voztify.Class.Album;
 
-public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder> {
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> {
 
     private Context context;
-    private List<Artist> artists;
+    private List<Album> albums;
 
-    public ArtistAdapter(Context context, List<Artist> artists) {
+    public AlbumAdapter(Context context, List<Album> albums) {
         this.context = context;
-        this.artists = artists;
+        this.albums = albums;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.artist_recycler_grid_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.album_grid_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (artists == null || artists.isEmpty()) {
+        if (albums == null || albums.isEmpty()) {
             return;
         }
 
-        Artist artist = artists.get(position);
+        Album album = albums.get(position);
         Picasso.get()
-                .load(artist.getPicture())
+                .load(album.getCover())
                 .placeholder(R.drawable.placeholder_img)
-                .into(holder.artistImage);
-        holder.artistName.setText(artist.getName());
+                .into(holder.albumCover);
+        holder.albumTitle.setText(album.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return artists != null ? artists.size() : 0;
+        return albums != null ? albums.size() : 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView artistImage;
-        TextView artistName;
+        ImageView albumCover;
+        TextView albumTitle;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            artistImage = itemView.findViewById(R.id.artist_image);
-            artistName = itemView.findViewById(R.id.artist_name);
+            albumCover = itemView.findViewById(R.id.album_cover);
+            albumTitle = itemView.findViewById(R.id.album_title);
         }
     }
 }
+

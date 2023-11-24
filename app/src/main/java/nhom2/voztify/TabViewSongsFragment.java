@@ -64,7 +64,7 @@ public class TabViewSongsFragment extends Fragment {
 
                         // Now you can use Gson to deserialize the "tracks" object
                         TrackData trackData = new Gson().fromJson(tracksObject, TrackData.class);
-                        List<Track> tracks = trackData.getData();
+                        List<Track> tracks = trackData.getTracks();
                         updateListView(tracks);
                     } else {
                         Log.e("Bai2", "Response does not contain 'tracks' field");
@@ -96,7 +96,6 @@ public class TabViewSongsFragment extends Fragment {
                 Intent intent = new Intent(context, PlayMusicActivity.class);
                 intent.putExtra("SONG_TITLE", track.getTitle());
                 intent.putExtra("SONG_ARTIST", track.getArtist().getName());
-                intent.putExtra("SONG_IMAGE", track.getAlbum().getCover_medium());
 
                 context.startActivity(intent);
             }
