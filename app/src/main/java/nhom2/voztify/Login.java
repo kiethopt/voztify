@@ -25,6 +25,7 @@ public class Login extends AppCompatActivity {
     Button btnLogin;
     Toolbar toolbar;
     private FirebaseAuth mAuth;
+    private boolean shouldGoToRegister = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +64,17 @@ public class Login extends AppCompatActivity {
     // Xử lý sự kiện khi nút back được nhấn
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        if (shouldGoToRegister) {
+            // Chuyển người dùng đến màn hình Register
+            Intent intent = new Intent(Login.this, Register.class);
+            startActivity(intent);
+            finish(); // Đóng activity hiện tại
+        } else {
+            // Hành vi mặc định
+            super.onBackPressed();
+        }
     }
+
     //Xử lý Log in
     public void LogIn(){
         String user = edtEmailOrPhoneNum.getText().toString();
