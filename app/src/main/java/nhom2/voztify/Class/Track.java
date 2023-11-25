@@ -30,6 +30,9 @@ public class Track {
     @SerializedName("album")
     private Album album;
 
+    @SerializedName("md5_image")
+    private String md5_image;
+
 
     // Các getter và setter cho mỗi trường
     public String getId() {
@@ -102,6 +105,14 @@ public class Track {
 
     public void setAlbum(Album album) {
         this.album = album;
+    }
+
+    public String getMd5_image() {
+        return md5_image;
+    }
+
+    public void setMd5_image(String md5_image) {
+        this.md5_image = md5_image;
     }
 
     public static class Artist {
