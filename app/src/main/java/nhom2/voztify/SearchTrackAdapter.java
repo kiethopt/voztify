@@ -4,6 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,9 +51,13 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
                     .placeholder(R.drawable.placeholder_img)
                     .into(holder.trackImage);
 
+            // Apply rotation animation
+            Animation rotation = AnimationUtils.loadAnimation(context, R.anim.rotate);
+            holder.trackImage.startAnimation(rotation);
 
         } else {
             holder.trackImage.setImageResource(R.drawable.silver);
+            holder.trackImage.clearAnimation(); // Clear animation if not needed
         }
     }
 
