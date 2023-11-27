@@ -131,13 +131,15 @@ public class PlayMusicActivity extends AppCompatActivity {
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
-            int currentPosition = mediaPlayer.getCurrentPosition();
-            int elapsedTimeInSeconds = currentPosition / 1000; // Convert to seconds
+            if (mediaPlayer != null) {
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                int elapsedTimeInSeconds = currentPosition / 1000; // Convert to seconds
 
-            startTime.setText(formatDuration(elapsedTimeInSeconds));
-            seekBar.setProgress(elapsedTimeInSeconds);
+                startTime.setText(formatDuration(elapsedTimeInSeconds));
+                seekBar.setProgress(elapsedTimeInSeconds);
 
-            handler.postDelayed(this, 100);
+                handler.postDelayed(this, 100);
+            }
         }
     };
 
