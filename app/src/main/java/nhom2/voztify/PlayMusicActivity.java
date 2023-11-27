@@ -17,7 +17,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import nhom2.voztify.Class.Track;
 
@@ -72,7 +71,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser){
-                    mediaPlayer.seekTo(progress);
+                    mediaPlayer.seekTo(progress * 1000); // Convert seconds to milliseconds
                     startTime.setText(formatDuration(progress));
                 }
             }
@@ -95,16 +94,21 @@ public class PlayMusicActivity extends AppCompatActivity {
                     mediaPlayer.start();
                     playPauseButton.setImageResource(R.drawable.ic_pause);
                     seekBar.setMax(mediaPlayer.getDuration() / 1000);
+                    handler.post(UpdateSongTime);
                 }
             });
             mediaPlayer.prepareAsync();
-            updateSeekBarAndTime();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         playPauseButton = findViewById(R.id.playPauseButton);
-        playPauseButton.setOnClickListener(v -> togglePlayPause());
+        playPauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                togglePlayPause();
+            }
+        });
     }
 
     public static String formatDuration(int durationInSeconds) {
@@ -124,26 +128,18 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
-    private void updateSeekBarAndTime() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                            int currentPosition = mediaPlayer.getCurrentPosition();
-                            int elapsedTimeInSeconds = currentPosition / 1000; // Convert to seconds
+    private Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            int currentPosition = mediaPlayer.getCurrentPosition();
+            int elapsedTimeInSeconds = currentPosition / 1000; // Convert to seconds
 
-                            seekBar.setProgress(elapsedTimeInSeconds);
-                            startTime.setText(formatDuration(elapsedTimeInSeconds));
-                        }
-                    }
-                });
-            }
-        }, 0, 200); // Update every 1 second
-    }
+            startTime.setText(formatDuration(elapsedTimeInSeconds));
+            seekBar.setProgress(elapsedTimeInSeconds);
+
+            handler.postDelayed(this, 100);
+        }
+    };
 
     @Override
     protected void onDestroy() {
