@@ -2,7 +2,9 @@ package nhom2.voztify.Class;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Track {
+import java.io.Serializable;
+
+public class Track implements Serializable {
     @SerializedName("id")
     private String id;
 
@@ -115,7 +117,7 @@ public class Track {
         this.md5_image = md5_image;
     }
 
-    public static class Artist {
+    public static class Artist implements Serializable {
         @SerializedName("name")
         private String name;
 

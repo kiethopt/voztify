@@ -25,13 +25,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TabViewSongsFragment extends Fragment {
+public class TabViewTracksFragment extends Fragment {
+    private static final int REQUEST_CODE_PLAY_MUSIC = 1;
     private Context context;
     private RecyclerView recyclerView;
-    private TrackAdapter songAdapter;
+    private TrackAdapter trackAdapter;
     private List<Track> trackList;
 
-    public TabViewSongsFragment() {
+    public TabViewTracksFragment() {
         // Required empty public constructor
     }
 
@@ -43,8 +44,6 @@ public class TabViewSongsFragment extends Fragment {
         context = getContext();
 
         fetchTracks();
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 2);
-        recyclerView.setLayoutManager(layoutManager);
 
         return view;
     }
@@ -62,16 +61,18 @@ public class TabViewSongsFragment extends Fragment {
                     if (jsonResponse.has("tracks")) {
                         JsonObject tracksObject = jsonResponse.getAsJsonObject("tracks");
 
-                        // Now you can use Gson to deserialize the "tracks" object
                         TrackData trackData = new Gson().fromJson(tracksObject, TrackData.class);
-                        List<Track> tracks = trackData.getTracks();
-                        updateListView(tracks);
+                        trackList = trackData.getTracks();
+                        updateListView(trackList);
+
+                        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 2);
+                        recyclerView.setLayoutManager(layoutManager);
                     } else {
-                        Log.e("Bai2", "Response does not contain 'tracks' field");
+                        Log.e("TrackFragment", "Response does not contain 'tracks' field");
                     }
                 } else {
                     try {
-                        Log.e("Bai2", "Error fetching tracks: " + response.errorBody().string());
+                        Log.e("TrackFragment", "Error fetching tracks: " + response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -80,7 +81,7 @@ public class TabViewSongsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.e("Bai2", "Error fetching tracks: " + t.getMessage());
+                Log.e("TrackFragment", "Error fetching tracks: " + t.getMessage());
             }
         });
     }
@@ -88,19 +89,18 @@ public class TabViewSongsFragment extends Fragment {
 
 
     private void updateListView(List<Track> tracks) {
-        TrackAdapter adapter = new TrackAdapter(context, tracks,new TrackAdapter.OnItemClickListener() {
+        trackAdapter = new TrackAdapter(context, tracks, new TrackAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Track track = trackList.get(position);
+                Track track = tracks.get(position);
 
-                Intent intent = new Intent(context, PlayMusicActivity.class);
-                intent.putExtra("SONG_TITLE", track.getTitle());
-                intent.putExtra("SONG_ARTIST", track.getArtist().getName());
+                Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
+                intent.putExtra("Track", track);
 
-                context.startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_PLAY_MUSIC);
             }
         });
 
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(trackAdapter);
     }
 }
