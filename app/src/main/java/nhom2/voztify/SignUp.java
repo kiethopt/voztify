@@ -143,9 +143,13 @@ public class SignUp extends AppCompatActivity {
         String birthDate = edtBirth.getText().toString();
         String name = edtName.getText().toString();
         String phone = edtPhoneNum.getText().toString();
-
-        if (confirmPassword.isEmpty() || birthDate.isEmpty() || name.isEmpty()) {
+        if (!isValidEmail(email)) {
+            Toast.makeText(SignUp.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            edtMail.requestFocus();
+            return;
+        }else if (confirmPassword.isEmpty() || birthDate.isEmpty() || name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
             Toast.makeText(SignUp.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            edtConfirmPass.requestFocus();
             return;
         } else if (email.isEmpty()) {
             Toast.makeText(SignUp.this, "Please fill your Email", Toast.LENGTH_SHORT).show();
@@ -153,14 +157,43 @@ public class SignUp extends AppCompatActivity {
         } else if (password.isEmpty()) {
             Toast.makeText(SignUp.this, "Please fill your Password", Toast.LENGTH_SHORT).show();
             return;
+        } else if (password.length() < 7) {
+            Toast.makeText(SignUp.this, "Password must be at least 7 characters", Toast.LENGTH_SHORT).show();
+            edtCreatePass.requestFocus();
+            return;
+        } else if (!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
+            Toast.makeText(SignUp.this, "Password must contain at least one special character", Toast.LENGTH_SHORT).show();
+            return;
         } else if (!password.equals(confirmPassword)) {
             Toast.makeText(SignUp.this, "Confirm Password Wrong !!!", Toast.LENGTH_SHORT).show();
             edtConfirmPass.requestFocus();
         } else {
+            // Kiểm tra nếu ngày sinh không hợp lệ (bé hơn 10 tuổi)
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                Calendar birthCalendar = Calendar.getInstance();
+                birthCalendar.setTime(sdf.parse(birthDate));
+
+                Calendar tenYearsAgo = Calendar.getInstance();
+                tenYearsAgo.add(Calendar.YEAR, -10);
+
+                if (birthCalendar.after(tenYearsAgo)) {
+                    Toast.makeText(SignUp.this, "You must be at least 10 years old to sign up.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(SignUp.this, "Invalid date format.", Toast.LENGTH_SHORT).show();
+                return;
+            }
            checkPhoneNumberExists(phone,email, password, name,birthDate);
         }
     }
-
+    // Phương thức kiểm tra định dạng email hợp lệ
+    private boolean isValidEmail(CharSequence target) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
     private void checkPhoneNumberExists(String phone, String email, String password, String name, String birthDate){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
@@ -176,7 +209,7 @@ public class SignUp extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                users = new User(email, name, phone, birthDate, gend, password);
+                                users = new User(email, name, phone, birthDate, gend);
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 FirebaseDatabase.getInstance().getReference("users").child(user.getUid()).setValue(users);
 

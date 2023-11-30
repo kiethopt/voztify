@@ -96,13 +96,12 @@ public class User {
         this.followingCount = followingCount;
     }
 
-    public User(String email, String name, String phoneNum, String birth, String gender, String password) {
+    public User(String email, String name, String phoneNum, String birth, String gender) {
         this.email = email;
         this.name = name;
         this.phoneNum = phoneNum;
         this.birth = birth;
         this.gender = gender;
-        this.password = password;
         this.bio = "";
         this.joinedOn = getCurrentDate();
         this.followingCount = 0;

@@ -1,29 +1,41 @@
 package nhom2.voztify;
 
+import static nhom2.voztify.Login.LOGIN_STATE_KEY;
+import static nhom2.voztify.Login.SHARE_PREFS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
 
 
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        toolbar = findViewById(R.id.topToolbar);
+        setSupportActionBar(toolbar);
+
+        // Kiểm tra trạng thái đăng nhập
+        if (!isLoggedIn()) {
+            // Nếu không đăng nhập, chuyển hướng đến Regis
+            startActivity(new Intent(HomeActivity.this, Register.class));
+            finish();
+        }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -58,8 +70,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
 
-
-
     }
 
     private void loadFragment(Fragment fragment) {
@@ -69,7 +79,42 @@ public class HomeActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    //Setting
+    //SettingActivity
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_navigatiom_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
 
+        if (itemId == R.id.menu_notification) {
+            // Xử lý khi nhấn vào mục Notification
+            // ...
+            return true;
+        } else if (itemId == R.id.menu_setting) {
+            // Xử lý khi nhấn vào mục SettingActivity
+            startActivity(new Intent(this, SettingActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    //check đăng nhập
+    private boolean isLoggedIn() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARE_PREFS, MODE_PRIVATE);
+        // Kiểm tra nếu thời gian hiện tại nhỏ hơn thời gian hết hạn
+        long expirationTime = sharedPreferences.getLong("EXPIRATION_TIME", 0);
+        boolean isExpired = System.currentTimeMillis() > expirationTime;
+        return !isExpired && sharedPreferences.getString(LOGIN_STATE_KEY, "").equals("true");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

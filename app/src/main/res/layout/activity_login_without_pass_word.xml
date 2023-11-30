@@ -5,11 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Login">
+    tools:context=".LoginWithoutPassWordActivity">
 
-    <!-- Toolbar vẫn giữ nguyên như cũ -->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:gravity="top"
@@ -19,13 +18,12 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log in"
+            android:layout_gravity="center"
+            android:text="Log in without password"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
+            android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Sử dụng LinearLayout để đặt các thành phần còn lại ở giữa -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,14 +40,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:text="Email or Phone number"
+            android:text="Email"
             android:textColor="#FFFFFF"
             android:textSize="25sp"
             android:textStyle="bold" />
 
         <!-- EditText cho Email or Phone Number -->
+
+        <!-- Nút Next -->
         <EditText
-            android:id="@+id/edtEmailOrPhoneNum"
+            android:id="@+id/edtEmail"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/edit_text_background"
@@ -61,58 +61,18 @@
             android:textColor="@color/white"
             tools:ignore="HardcodedText" />
 
-        <!-- TextView cho Password -->
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="Password"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <!-- EditText cho Password -->
-        <EditText
-            android:id="@+id/edtPass"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:autofillHints="no"
-            android:background="@drawable/edit_text_background"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:paddingStart="20dp"
-            android:textColor="@color/white"
-            tools:ignore="HardcodedText" />
-
-        <!-- Nút Login -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:background="@drawable/button_background_3"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            android:text="Log in"
+            android:text="Next"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
         <!-- Nút forgot password -->
-        <TextView
-            android:id="@+id/tvFPass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_background_2"
-            android:textColor="@color/white"
-            android:paddingTop="5dp"
-            android:paddingBottom="6dp"
-            android:paddingHorizontal="12dp"
-            android:text="Log in without password"
-            android:textAllCaps="false"
-            android:textSize="13dp"
-            tools:ignore="HardcodedText" />
     </LinearLayout>
 </RelativeLayout>

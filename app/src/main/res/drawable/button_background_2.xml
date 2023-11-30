@@ -4,8 +4,8 @@
     <!-- Shape layer for the background color -->
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="30dp" />
-            <solid android:color="#CAD8CF" />
+            <corners android:radius="35dp" />
+            <solid android:color="@color/lay" />
         </shape>
     </item>
 
@@ -16,7 +16,7 @@
         android:top="2dp"
         android:bottom="2dp">
         <shape android:shape="rectangle">
-            <corners android:radius="30dp" />
+            <corners android:radius="35dp" />
             <solid android:color="@color/black" />
         </shape>
     </item>
