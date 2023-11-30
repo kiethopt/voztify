@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import nhom2.voztify.Api.DZService;
@@ -96,7 +97,7 @@ public class TabViewTracksFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
                 intent.putExtra("Track", track);
-
+                intent.putExtra("TracksList", (Serializable) trackList);
                 startActivityForResult(intent, REQUEST_CODE_PLAY_MUSIC);
             }
         });
