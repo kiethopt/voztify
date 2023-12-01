@@ -24,6 +24,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
     private Context context;
     private List<Track> tracks;
+    private OnTrackClickListener trackClickListener;
 
     public SearchTrackAdapter(Context context, List<Track> tracks) {
         this.context = context;
@@ -61,6 +62,14 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
         }
     }
 
+    public interface OnTrackClickListener {
+        void onTrackClick(Track track);
+    }
+
+    public void setTrackClickListener(OnTrackClickListener listener) {
+        this.trackClickListener = listener;
+    }
+
     @Override
     public int getItemCount() {
         return tracks.size();
@@ -69,6 +78,10 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
     public void updateTracks(List<Track> newTracks) {
         this.tracks = newTracks;
         notifyDataSetChanged();
+    }
+
+    public List<Track> getTracks() {
+        return tracks;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -81,6 +94,21 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
             trackImage = itemView.findViewById(R.id.track_image);
             trackTitle = itemView.findViewById(R.id.track_title);
             trackArtistName = itemView.findViewById(R.id.track_artist_name);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (trackClickListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            Track selectedTrack = tracks.get(position);
+                            // Đảm bảo rằng selectedTrack có thông tin Album
+                            trackClickListener.onTrackClick(selectedTrack);
+                        }
+                    }
+                }
+            });
+
         }
     }
 }

@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +51,16 @@ public class AlbumDetailActivity extends AppCompatActivity {
         searchtrackAdapter = new SearchTrackAdapter(this, new ArrayList<>());
         albumTracksRecyclerView.setAdapter(searchtrackAdapter);
 
+        searchtrackAdapter.setTrackClickListener(new SearchTrackAdapter.OnTrackClickListener() {
+            @Override
+            public void onTrackClick(Track track) {
+                Intent intent = new Intent(AlbumDetailActivity.this, PlayMusicActivity.class);
+                intent.putExtra("Track", track);
+                intent.putExtra("TracksList", (Serializable) searchtrackAdapter.getTracks()); // Gửi danh sách các track
+                startActivity(intent);
+            }
+        });
+
         fetchAlbumTracks(album.getId());
     }
 
@@ -61,15 +73,13 @@ public class AlbumDetailActivity extends AppCompatActivity {
             public void onResponse(Call<TrackData> call, Response<TrackData> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Track> tracks = response.body().getTracks();
-                    searchtrackAdapter.updateTracks(tracks); // Update the adapter with the fetched tracks
+                    searchtrackAdapter.updateTracks(tracks);
                 } else {
-                    // Handle the case where the response is not successful
                 }
             }
 
             @Override
             public void onFailure(Call<TrackData> call, Throwable t) {
-                // Handle the failure case
             }
         });
     }

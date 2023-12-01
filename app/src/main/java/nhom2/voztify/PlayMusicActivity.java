@@ -49,10 +49,18 @@ public class PlayMusicActivity extends AppCompatActivity {
         trackList = (List<Track>) getIntent().getSerializableExtra("TracksList");
         currentTrackTitle = track.getTitle();
 
-        Picasso.get()
-                .load(track.getAlbum().getCover_medium())
-                .placeholder(R.drawable.placeholder_img)
-                .into(imgViewSong);
+        if (track != null && track.getMd5_image() != null) {
+            String imageUrl = "https://e-cdns-images.dzcdn.net/images/cover/" + track.getMd5_image() + "/250x250-000000-80-0-0.jpg";
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_img)
+                    .into(imgViewSong);
+        } else {
+            // Xử lý trường hợp không có hình ảnh thì thay bằng ảnh vinyl
+            imgViewSong.setImageResource(R.drawable.silver);
+        }
+
 
         songTitleTextView.setText(track.getTitle());
 
@@ -208,16 +216,16 @@ public class PlayMusicActivity extends AppCompatActivity {
             currentTrackTitle = firstTrack.getTitle();
             startNewTrack(firstTrack);
         } else {
-            // Handle the case where the current index is not found or out of bounds
             Toast.makeText(getApplicationContext(), "Invalid track index", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void startNewTrack(Track newTrack) {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
             mediaPlayer.release();
-            mediaPlayer = null;
         }
 
         mediaPlayer = new MediaPlayer();
@@ -238,13 +246,20 @@ public class PlayMusicActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Picasso.get()
-                .load(newTrack.getAlbum().getCover_medium())
-                .placeholder(R.drawable.placeholder_img)
-                .into(imgViewSong);
+        // Cập nhật lại UI cho mới.
+        updateUI(newTrack);
+    }
 
-        songTitleTextView.setText(newTrack.getTitle());
-        songArtistTextView.setText(newTrack.getArtist().getName());
+    private void updateUI(Track track) {
+        songTitleTextView.setText(track.getTitle());
+        songArtistTextView.setText(track.getArtist().getName());
+
+        if (track.getMd5_image() != null) {
+            String imageUrl = "https://e-cdns-images.dzcdn.net/images/cover/" + track.getMd5_image() + "/250x250-000000-80-0-0.jpg";
+            Picasso.get().load(imageUrl).placeholder(R.drawable.placeholder_img).into(imgViewSong);
+        } else {
+            imgViewSong.setImageResource(R.drawable.silver);
+        }
     }
 
     @Override

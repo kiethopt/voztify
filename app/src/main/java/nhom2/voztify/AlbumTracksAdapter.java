@@ -33,7 +33,6 @@ public class AlbumTracksAdapter extends RecyclerView.Adapter<AlbumTracksAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Track track = tracks.get(position);
         holder.trackTitle.setText(track.getTitle());
-        // Additional track details can be set here
     }
 
     @Override
@@ -47,7 +46,6 @@ public class AlbumTracksAdapter extends RecyclerView.Adapter<AlbumTracksAdapter.
         public ViewHolder(View view) {
             super(view);
             trackTitle = view.findViewById(R.id.track_title);
-            // Initialize other views if needed
         }
     }
 }

@@ -35,7 +35,6 @@ public class Track implements Serializable {
     @SerializedName("md5_image")
     private String md5_image;
 
-
     // Các getter và setter cho mỗi trường
     public String getId() {
         return id;
