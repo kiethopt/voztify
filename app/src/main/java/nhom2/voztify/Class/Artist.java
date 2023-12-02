@@ -14,6 +14,16 @@ public class Artist implements Serializable {
     @SerializedName("picture")
     private String picture;
 
+    @SerializedName("picture_small")
+    private String picture_small;
+
+    @SerializedName("picture_medium")
+    private String picture_medium;
+
+    @SerializedName("picture_big")
+    private String picture_big;
+
+
     // Other fields and methods
 
     // Constructor
@@ -47,5 +57,29 @@ public class Artist implements Serializable {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public String getPicture_small() {
+        return picture_small;
+    }
+
+    public void setPicture_small(String picture_small) {
+        this.picture_small = picture_small;
+    }
+
+    public String getPicture_medium() {
+        return picture_medium;
+    }
+
+    public void setPicture_medium(String picture_medium) {
+        this.picture_medium = picture_medium;
+    }
+
+    public String getPicture_big() {
+        return picture_big;
+    }
+
+    public void setPicture_big(String picture_big) {
+        this.picture_big = picture_big;
     }
 }

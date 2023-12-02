@@ -3,8 +3,9 @@ package nhom2.voztify.Api;
 import com.google.gson.JsonObject;
 
 import nhom2.voztify.AlbumSearchResponse;
+import nhom2.voztify.ArtistAlbumsResponse;
 import nhom2.voztify.ArtistSearchResponse;
-import nhom2.voztify.TrackData;
+import nhom2.voztify.TrackResponse;
 import nhom2.voztify.TrendingAlbumResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,10 +14,16 @@ import retrofit2.http.Query;
 
 public interface DZService {
     @GET("/editorial/0/charts")
-    Call<JsonObject> getTracks();
+    Call<JsonObject> getTopTracks();
+
+    @GET("/editorial/0/charts")
+    Call<JsonObject> getTopArtists();
 
     @GET("/search/artist")
     Call<ArtistSearchResponse> searchArtist(@Query("q") String artistName);
+
+    @GET("/artist/{artist_id}/albums")
+    Call<ArtistAlbumsResponse> getArtistAlbums(@Path("artist_id") String artistId);
 
     @GET("/search/album")
     Call<AlbumSearchResponse> searchAlbum(@Query("q") String albumTitle);
@@ -25,6 +32,6 @@ public interface DZService {
     Call<TrendingAlbumResponse> getTrendingAlbums();
 
     @GET("/album/{album_id}/tracks")
-    Call<TrackData> getAlbumTracks(@Path("album_id") String albumId);
+    Call<TrackResponse> getAlbumTracks(@Path("album_id") String albumId);
 }
 

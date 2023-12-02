@@ -51,7 +51,7 @@ public class TabViewTracksFragment extends Fragment {
 
     private void fetchTracks() {
         DZService service = DeezerService.getService();
-        Call<JsonObject> call = service.getTracks(); // Assume JsonObject as the response type
+        Call<JsonObject> call = service.getTopTracks(); // Assume JsonObject as the response type
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -62,7 +62,7 @@ public class TabViewTracksFragment extends Fragment {
                     if (jsonResponse.has("tracks")) {
                         JsonObject tracksObject = jsonResponse.getAsJsonObject("tracks");
 
-                        TrackData trackData = new Gson().fromJson(tracksObject, TrackData.class);
+                        TrackResponse trackData = new Gson().fromJson(tracksObject, TrackResponse.class);
                         trackList = trackData.getTracks();
                         updateListView(trackList);
 

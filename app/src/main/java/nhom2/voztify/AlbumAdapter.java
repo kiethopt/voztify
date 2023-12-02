@@ -21,6 +21,17 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     private Context context;
     private List<Album> albums;
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
+
     public AlbumAdapter(Context context, List<Album> albums) {
         this.context = context;
         this.albums = albums;
@@ -45,6 +56,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                 .placeholder(R.drawable.placeholder_img)
                 .into(holder.albumCover);
         holder.albumTitle.setText(album.getTitle());
+
+
     }
 
     @Override
@@ -60,7 +73,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
             super(itemView);
             albumCover = itemView.findViewById(R.id.album_cover);
             albumTitle = itemView.findViewById(R.id.album_title);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            onItemClickListener.onItemClick(v, position);
+                        }
+                    }
+                }
+            });
         }
     }
+
 }
 

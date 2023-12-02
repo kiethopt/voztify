@@ -30,11 +30,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void updateTracks(List<Track> newTracks) {
-        this.tracks = newTracks;
-        notifyDataSetChanged();
-    }
-
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }

@@ -19,7 +19,6 @@ import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
 import nhom2.voztify.Class.Album;
 import nhom2.voztify.Class.Track;
-import nhom2.voztify.TrackData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,11 +65,11 @@ public class AlbumDetailActivity extends AppCompatActivity {
 
     private void fetchAlbumTracks(String albumId) {
         DZService service = DeezerService.getService();
-        Call<TrackData> call = service.getAlbumTracks(albumId);
+        Call<TrackResponse> call = service.getAlbumTracks(albumId);
 
-        call.enqueue(new Callback<TrackData>() {
+        call.enqueue(new Callback<TrackResponse>() {
             @Override
-            public void onResponse(Call<TrackData> call, Response<TrackData> response) {
+            public void onResponse(Call<TrackResponse> call, Response<TrackResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Track> tracks = response.body().getTracks();
                     searchtrackAdapter.updateTracks(tracks);
@@ -79,7 +78,7 @@ public class AlbumDetailActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<TrackData> call, Throwable t) {
+            public void onFailure(Call<TrackResponse> call, Throwable t) {
             }
         });
     }

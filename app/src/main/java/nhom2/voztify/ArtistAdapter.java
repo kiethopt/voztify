@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +21,21 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
 
     private Context context;
     private List<Artist> artists;
+    private ArtistAdapter.OnItemClickListener onItemClickListener;
 
-    public ArtistAdapter(Context context, List<Artist> artists) {
+
+    public ArtistAdapter(Context context, List<Artist> artists, ArtistAdapter.OnItemClickListener onItemClickListener) {
         this.context = context;
         this.artists = artists;
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(ArtistAdapter.OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     @NonNull
@@ -34,7 +46,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if (artists == null || artists.isEmpty()) {
             return;
         }
@@ -45,6 +57,18 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
                 .placeholder(R.drawable.placeholder_img)
                 .into(holder.artistImage);
         holder.artistName.setText(artist.getName());
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, position);
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -61,5 +85,6 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
             artistImage = itemView.findViewById(R.id.artist_image);
             artistName = itemView.findViewById(R.id.artist_name);
         }
+
     }
 }
