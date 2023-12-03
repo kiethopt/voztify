@@ -60,7 +60,7 @@ public class TabViewArtistsFragment extends Fragment {
                     if (jsonResponse.has("artists")) {
                         JsonObject tracksObject = jsonResponse.getAsJsonObject("artists");
 
-                        ArtistData artistData = new Gson().fromJson(tracksObject, ArtistData.class);
+                        ArtistResponse artistData = new Gson().fromJson(tracksObject, ArtistResponse.class);
                         artistList = artistData.getArtists();
                         updateListView(artistList);
 

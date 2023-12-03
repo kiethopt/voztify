@@ -2,6 +2,9 @@ package nhom2.voztify;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +25,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     private Context context;
     private List<Artist> artists;
     private ArtistAdapter.OnItemClickListener onItemClickListener;
-
+    private static float textSize = 20;
 
     public ArtistAdapter(Context context, List<Artist> artists, ArtistAdapter.OnItemClickListener onItemClickListener) {
         this.context = context;
@@ -51,6 +54,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
             return;
         }
 
+        Log.e("ARTIST", artists.toString());
+
         Artist artist = artists.get(position);
         Picasso.get()
                 .load(artist.getPicture())
@@ -68,7 +73,18 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
                 }
             }
         });
+        holder.artistName.setTextSize(textSize);
+    }
 
+    public static void savePreferences(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putFloat("text_size", textSize);
+        editor.apply();
+    }
+    public static void updateTextSize(Context context, float size) {
+        textSize = size;
+        savePreferences(context);
     }
 
     @Override

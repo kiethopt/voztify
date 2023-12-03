@@ -6,14 +6,14 @@ import java.util.List;
 
 import nhom2.voztify.Class.Artist;
 
-public class ArtistData {
+public class ArtistResponse {
     @SerializedName("data")
     private List<Artist> artists;
 
     public List<Artist> getArtists() {
         return artists;
     }
-    public void setArtists(List<Artist> tracks) {
-        this.artists = tracks;
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
     }
 }

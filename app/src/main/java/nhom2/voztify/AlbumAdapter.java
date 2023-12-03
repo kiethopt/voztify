@@ -1,6 +1,9 @@
 package nhom2.voztify;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
     private Context context;
     private List<Album> albums;
+    private static int backgroundColor = Color.parseColor("#040D12");
+    private static int textColor = Color.BLACK; //Defailt color
+
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -56,10 +62,25 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
                 .placeholder(R.drawable.placeholder_img)
                 .into(holder.albumCover);
         holder.albumTitle.setText(album.getTitle());
-
-
+        holder.itemView.setBackgroundColor(backgroundColor);
+        holder.albumTitle.setTextColor(textColor);
     }
 
+    public static void savePreferences(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("background_color", "#" + Integer.toHexString(backgroundColor & 0x00FFFFFF)); // Save as a hexadecimal string
+        editor.apply();
+    }
+
+    public static void updateBackground(Context context, String colorHexCode) {
+        backgroundColor = Color.parseColor(colorHexCode);
+        savePreferences(context);
+    }
+    public static void updateTextColor(Context context, int color) {
+        textColor = color;
+        savePreferences(context);
+    }
     @Override
     public int getItemCount() {
         return albums != null ? albums.size() : 0;

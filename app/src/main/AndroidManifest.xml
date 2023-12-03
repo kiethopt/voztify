@@ -26,6 +26,9 @@
             android:name=".LoginWithoutPassWordActivity"
             android:exported="false" />
         <activity
+            android:name=".ArtistDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".AlbumDetailActivity"
             android:exported="false" />
         <activity
@@ -50,23 +53,23 @@
             android:name=".SignUp"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name=".Login"
             android:exported="false">
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".Register"
             android:exported="true" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".HomeActivity"
             android:exported="false" />
     </application>
 

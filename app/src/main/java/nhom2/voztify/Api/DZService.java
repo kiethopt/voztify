@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import nhom2.voztify.AlbumSearchResponse;
 import nhom2.voztify.ArtistAlbumsResponse;
 import nhom2.voztify.ArtistSearchResponse;
+import nhom2.voztify.ArtistTracksResponse;
+import nhom2.voztify.RelatedArtistsResponse;
 import nhom2.voztify.TrackResponse;
 import nhom2.voztify.TrendingAlbumResponse;
 import retrofit2.Call;
@@ -25,6 +27,11 @@ public interface DZService {
     @GET("/artist/{artist_id}/albums")
     Call<ArtistAlbumsResponse> getArtistAlbums(@Path("artist_id") String artistId);
 
+    @GET("/artist/{artist_id}/radio")
+    Call<ArtistTracksResponse> getArtistTracks(@Path("artist_id") String artistId);
+    @GET("/artist/{artist_id}/related")
+    Call<RelatedArtistsResponse> getRelatedArtists(@Path("artist_id") String artistId);
+    
     @GET("/search/album")
     Call<AlbumSearchResponse> searchAlbum(@Query("q") String albumTitle);
 

@@ -2,6 +2,10 @@ package nhom2.voztify;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
     private Context context;
     private List<Track> tracks;
     private OnItemClickListener onItemClickListener;
+    private static int backgroundColor = Color.parseColor("#040D12");
+    private static int textGravity = Gravity.START;
+    private static float textSize = 20;
+    private static int songArtistVisibility = View.VISIBLE;
 
     public TrackAdapter(Context context, List<Track> tracks, OnItemClickListener onItemClickListener) {
         this.context = context;
@@ -79,12 +87,42 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
                 }
             }
         });
-    }
 
+        holder.songTitle.setGravity(textGravity);
+        holder.itemView.setBackgroundColor(backgroundColor);
+        holder.songTitle.setTextSize(textSize);
+        holder.songArtist.setVisibility(songArtistVisibility);
+    }
 
     @Override
     public int getItemCount() {
         return tracks.size();
+    }
+    public static void savePreferences(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("background_color", "#" + Integer.toHexString(backgroundColor & 0x00FFFFFF)); // Save as a hexadecimal string
+        editor.putFloat("text_size", textSize);
+        editor.putInt("text_gravity", textGravity);
+        editor.putInt("song_artist_visibility", songArtistVisibility);
+        editor.apply();
+    }
+
+    public static void updateBackground(Context context, String colorHexCode) {
+        backgroundColor = Color.parseColor(colorHexCode);
+        savePreferences(context);
+    }
+    public static void updateTextSize(Context context, float size) {
+        textSize = size;
+        savePreferences(context);
+    }
+    public static void updateSongArtistVisibility(Context context, int visibility) {
+        songArtistVisibility = visibility;
+        savePreferences(context);
+    }
+    public static void updateTextGravity(Context context, int gravity) {
+        textGravity = gravity;
+        savePreferences(context);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -98,7 +136,5 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             songTitle = itemView.findViewById(R.id.song_title);
             songArtist = itemView.findViewById(R.id.song_artist);
         }
-
-
     }
 }
