@@ -125,76 +125,35 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="#040D12">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-            <!-- TextView Top Genres -->
+            <!-- RecyclerView Top Radio Genres -->
             <TextView
-                android:id="@+id/tvTopGenres"
+                android:id="@+id/tvTopRadioGenres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#5C8374"
                 android:textSize="18dp"
                 android:textStyle="bold"
-                android:text="Top genres" />
+                android:text="Top Radio Genres" />
 
-            <!-- ListView Top Genres -->
-            <ListView
-                android:id="@+id/lvTopGenres"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTopRadioGenres"
                 android:layout_width="match_parent"
-                android:background="#808080"
-                android:layout_marginTop="5dp"
-                android:layout_height="130dp"
-                android:divider="#FFFFFF"
-                android:dividerHeight="1dp" />
-
-            <!-- TextView Top Artists -->
-            <TextView
-                android:id="@+id/tvTopArtists"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textColor="#5C8374"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:text="Top artists" />
-
-            <!-- ListView Top Artists -->
-            <ListView
-                android:id="@+id/lvTopArtists"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginTop="5dp"
-                android:background="#808080"
-                android:divider="#FFFFFF"
-                android:dividerHeight="1dp" />
-
-            <!-- TextView Top Tracks -->
-            <TextView
-                android:id="@+id/tvTopTracks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#5C8374"
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:text="Top tracks" />
-
-            <!-- ListView Top Tracks -->
-            <ListView
-                android:id="@+id/lvTopTracks"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginTop="5dp"
-                android:background="#808080"
-                android:divider="#FFFFFF"
-                android:dividerHeight="1dp" />
-
+                android:background="#040D12"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:paddingBottom="10dp"/>
         </LinearLayout>
     </ScrollView>
+
+
 
 
 </LinearLayout>

@@ -2,10 +2,13 @@ package nhom2.voztify.Api;
 
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 import nhom2.voztify.AlbumSearchResponse;
 import nhom2.voztify.ArtistAlbumsResponse;
 import nhom2.voztify.ArtistSearchResponse;
 import nhom2.voztify.ArtistTracksResponse;
+import nhom2.voztify.Class.Track;
 import nhom2.voztify.RelatedArtistsResponse;
 import nhom2.voztify.TrackResponse;
 import nhom2.voztify.TrendingAlbumResponse;

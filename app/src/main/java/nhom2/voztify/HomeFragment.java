@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +42,11 @@ import java.util.List;
 import nhom2.voztify.Api.SpotifyApi;
 
 public class HomeFragment extends Fragment {
+
+    private RecyclerView recyclerViewTopRadioGenres;
+    private List<TopRadioGenre> topRadioGenresData;
+    private TopRadioGenresAdapter topRadioGenresAdapter;
+
 
     private TextView emailTextView;
     private TextView nameTextView;
@@ -66,7 +74,19 @@ public class HomeFragment extends Fragment {
         bioTextView = view.findViewById(R.id.bioTextView);
         profilePhoto = view.findViewById(R.id.profilePhoto);
 
-        fetchTopGenres();
+        // Initialize RecyclerView, data list, and adapter
+        RecyclerView recyclerViewTopRadioGenres = view.findViewById(R.id.rvTopRadioGenres);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewTopRadioGenres.setLayoutManager(layoutManager);
+
+        // Initialize the data list and the adapter
+        topRadioGenresData = new ArrayList<>();
+        topRadioGenresAdapter = new TopRadioGenresAdapter(topRadioGenresData);
+        recyclerViewTopRadioGenres.setAdapter(topRadioGenresAdapter);
+
+        fetchTopRadioGenres();
+
+
 
         // Xóa dữ liệu cũ từ SharedPreferences
         clearSharedPreferences();
@@ -93,74 +113,63 @@ public class HomeFragment extends Fragment {
 
 
     // ============================== TOP GENRES - API =================================
-    private void fetchTopGenres() {
+    // Thêm vào HomeFragment.java
+    private void fetchTopRadioGenres() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String accessToken = SpotifyApi.getAccessToken();
-                if (accessToken != null) {
-                    try {
-                        URL url = new URL("https://api.spotify.com/v1/browse/categories");
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setRequestMethod("GET");
-                        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+                try {
+                    URL url = new URL("https://api.deezer.com/radio");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
 
-                        int responseCode = conn.getResponseCode();
-                        if (responseCode == HttpURLConnection.HTTP_OK) {
-                            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                            String inputLine;
-                            StringBuilder response = new StringBuilder();
-                            while ((inputLine = in.readLine()) != null) {
-                                response.append(inputLine);
-                            }
-                            in.close();
-
-                            // Parse JSON and get genres
-                            List<String> genres = parseGenres(response.toString());
-
-                            // Update ListView on UI thread
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateListView(genres);
-                                }
-                            });
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        String inputLine;
+                        StringBuilder response = new StringBuilder();
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        in.close();
+
+                        // Parse JSON and get top radio genres
+                        List<TopRadioGenre> topRadioGenres = parseTopRadioGenres(response.toString());
+
+                        // Update UI on the main thread
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                topRadioGenresData.addAll(topRadioGenres);
+                                topRadioGenresAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
 
-    private List<String> parseGenres(String json) {
-        List<String> genres = new ArrayList<>();
+    private List<TopRadioGenre> parseTopRadioGenres(String json) {
+        List<TopRadioGenre> topRadioGenres = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray categories = jsonObject.getJSONObject("categories").getJSONArray("items");
-            for (int i = 0; i < categories.length(); i++) {
-                String genre = categories.getJSONObject(i).getString("name");
-                genres.add(genre);
+            JSONArray data = jsonObject.getJSONArray("data");
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject radioGenreObject = data.getJSONObject(i);
+                String id = radioGenreObject.getString("id");
+                String title = radioGenreObject.getString("title");
+                String pictureUrl = radioGenreObject.getString("picture");
+
+                TopRadioGenre topRadioGenre = new TopRadioGenre(id, title, pictureUrl);
+                topRadioGenres.add(topRadioGenre);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return genres;
-    }
-
-    private void updateListView(List<String> genres) {
-        if (getView() != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, genres);
-            ListView listView = getView().findViewById(R.id.lvTopGenres);
-            if (listView != null) {
-                listView.setAdapter(adapter);
-            } else {
-                Log.e("HomeFragment", "ListView is null");
-            }
-        } else {
-            Log.e("HomeFragment", "Fragment's view is null");
-        }
+        return topRadioGenres;
     }
 
     // ===============================================================================

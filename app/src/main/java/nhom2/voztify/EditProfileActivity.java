@@ -79,8 +79,8 @@ public class EditProfileActivity extends AppCompatActivity {
         TextInputEditText bioEditText = findViewById(R.id.bioEditText);
         TextInputEditText phoneNumEditText = findViewById(R.id.phoneNumEditText);
 
-        // Ràng buộc độ dài cho edtName (tối đa 20 kí tự)
-        nameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        // Ràng buộc độ dài cho edtName (tối đa 10 kí tự)
+        nameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
 
         // Ràng buộc độ dài cho edtBio (tối đa 30 kí tự)
         bioEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
