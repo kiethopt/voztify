@@ -91,6 +91,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+
     // ============================== TOP GENRES - API =================================
     private void fetchTopGenres() {
         new Thread(new Runnable() {
@@ -163,6 +164,7 @@ public class HomeFragment extends Fragment {
     }
 
     // ===============================================================================
+
 
     // Thêm phương thức để xóa dữ liệu từ SharedPreferences
     private void clearSharedPreferences() {

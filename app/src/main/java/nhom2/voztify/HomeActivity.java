@@ -108,8 +108,8 @@ public class HomeActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARE_PREFS, MODE_PRIVATE);
         // Kiểm tra nếu thời gian hiện tại nhỏ hơn thời gian hết hạn
         long expirationTime = sharedPreferences.getLong("EXPIRATION_TIME", 0);
-        boolean isExpired = System.currentTimeMillis() > expirationTime;
-        return !isExpired && sharedPreferences.getString(LOGIN_STATE_KEY, "").equals("true");
+       // boolean isExpired = System.currentTimeMillis() > expirationTime;!isExpired &&
+        return  sharedPreferences.getString(LOGIN_STATE_KEY, "").equals("true");
 
     }
 
