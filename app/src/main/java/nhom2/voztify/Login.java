@@ -58,18 +58,18 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
-        // Kiểm tra đã đăng nhập và thời gian hết hạn
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARE_PREFS, MODE_PRIVATE);
-        String check = sharedPreferences.getString(LOGIN_STATE_KEY, "");
-        long expirationTime = sharedPreferences.getLong("EXPIRATION_TIME", 0);
-
-        if (check.equals("true") && System.currentTimeMillis() < expirationTime) {
-            // Nếu trạng thái đăng nhập còn hiệu lực, chuyển đến HomeActivity
-            Toast.makeText(this, "Log in Success!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-        }
+//
+//        // Kiểm tra đã đăng nhập và thời gian hết hạn
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARE_PREFS, MODE_PRIVATE);
+//        String check = sharedPreferences.getString(LOGIN_STATE_KEY, "");
+//        long expirationTime = sharedPreferences.getLong("EXPIRATION_TIME", 0);
+//
+//        if (check.equals("true") && System.currentTimeMillis() < expirationTime) {
+//            // Nếu trạng thái đăng nhập còn hiệu lực, chuyển đến HomeActivity
+//            Toast.makeText(this, "Log in Success!", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(this, HomeActivity.class));
+//            finish();
+//        }
 
         // btn đăng nhập
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -130,14 +130,23 @@ public class Login extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(LOGIN_STATE_KEY, "true");
 
-        // Lưu thời gian hết hạn (thời điểm hiện tại + 3 ngày)
-        long expirationTime = System.currentTimeMillis() + (3 * 24 * 60 * 60 * 1000); // 3 ngày
-        editor.putLong("EXPIRATION_TIME", expirationTime);
+//        // Lưu thời gian hết hạn (thời điểm hiện tại + 3 ngày)
+//        long expirationTime = System.currentTimeMillis() + (3 * 24 * 60 * 60 * 1000); // 3 ngày
+//        editor.putLong("EXPIRATION_TIME", expirationTime);
         editor.apply();
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (shouldGoToRegister) {
+            saveLoginState();
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
