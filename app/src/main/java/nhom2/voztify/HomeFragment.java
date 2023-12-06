@@ -3,6 +3,7 @@ package nhom2.voztify;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -31,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,12 +44,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import nhom2.voztify.Api.DZService;
+import nhom2.voztify.Api.DeezerService;
 import nhom2.voztify.Api.SpotifyApi;
+import nhom2.voztify.Class.Artist;
 import nhom2.voztify.Class.History;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import android.Manifest;
+
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerViewTopRadioGenres;
+    private RecyclerView recyclerViewTopArtist;
+    private ArtistAdapter artistAdapter;
+    private List<Artist> artistList;
     private List<TopRadioGenre> topRadioGenresData;
     private TopRadioGenresAdapter topRadioGenresAdapter;
 
@@ -64,6 +80,7 @@ public class HomeFragment extends Fragment {
     // Thêm tên của SharedPreferences
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final int EDIT_PROFILE_REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_PERMISSION = 123;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,6 +96,7 @@ public class HomeFragment extends Fragment {
         editProfileImageView = view.findViewById(R.id.editProfileImageView);
         bioTextView = view.findViewById(R.id.bioTextView);
         profilePhoto = view.findViewById(R.id.profilePhoto);
+        recyclerViewTopArtist =view.findViewById(R.id.recyclerViewTopArtist);
         rvRecentlyPlayed = view.findViewById(R.id.rvRecentlyPlayed);
 
         // Initialize RecyclerView, data list, and adapter
@@ -91,12 +109,14 @@ public class HomeFragment extends Fragment {
         topRadioGenresAdapter = new TopRadioGenresAdapter(topRadioGenresData);
         recyclerViewTopRadioGenres.setAdapter(topRadioGenresAdapter);
 
-        fetchTopRadioGenres();
-
-
-
-
-
+        // Cấp quyền để hình ảnh không mất khi đăng nhập lại
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            // Quyền đã được cấp, tiến hành xử lý tương tác với tệp hình ảnh ở đây
+        } else {
+            // Nếu quyền chưa được cấp, bạn có thể yêu cầu quyền từ người dùng
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+        }
+        //--------------------------------------------------
 
         // Initialize the RecyclerView, data list, and adapter for Recently Played
         rvRecentlyPlayed = view.findViewById(R.id.rvRecentlyPlayed);
@@ -108,19 +128,13 @@ public class HomeFragment extends Fragment {
         recentlyPlayedAdapter = new RecentlyPlayedAdapter(getActivity(), recentlyPlayedList);
         rvRecentlyPlayed.setAdapter(recentlyPlayedAdapter);
 
+        fetchArtists();
+        fetchTopRadioGenres();
         // Fetch and display the user's recently played tracks
         fetchRecentlyPlayedTracks();
 
-
-
-
-
-
-
-
-
         // Xóa dữ liệu cũ từ SharedPreferences
-       // clearSharedPreferences();
+        // clearSharedPreferences();
 
         // Hiển thị thông tin người dùng mới
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -131,7 +145,6 @@ public class HomeFragment extends Fragment {
             String savedImageUri = loadImageUriFromSharedPreferences(user.getUid());
                 Log.d("HomeFragment", "Saved Image URI: " + savedImageUri);
         }
-
         editProfileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,69 +155,21 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    // Cấp quyền để hình ảnh không mất khi đăng nhập lại
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-    // ============================== TOP GENRES - API =================================
-    // Thêm vào HomeFragment.java
-    private void fetchTopRadioGenres() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("https://api.deezer.com/radio");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-
-                    int responseCode = conn.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        String inputLine;
-                        StringBuilder response = new StringBuilder();
-                        while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
-                        }
-                        in.close();
-
-                        // Parse JSON and get top radio genres
-                        List<TopRadioGenre> topRadioGenres = parseTopRadioGenres(response.toString());
-
-                        // Update UI on the main thread
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                topRadioGenresData.addAll(topRadioGenres);
-                                topRadioGenresAdapter.notifyDataSetChanged();
-                            }
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            // Handle the result of the permission request
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with handling interactions with image files here
+            } else {
+                // Permission not granted, you can notify the user or perform other actions
             }
-        }).start();
-    }
-
-    private List<TopRadioGenre> parseTopRadioGenres(String json) {
-        List<TopRadioGenre> topRadioGenres = new ArrayList<>();
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray data = jsonObject.getJSONArray("data");
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject radioGenreObject = data.getJSONObject(i);
-                String id = radioGenreObject.getString("id");
-                String title = radioGenreObject.getString("title");
-                String pictureUrl = radioGenreObject.getString("picture");
-
-                TopRadioGenre topRadioGenre = new TopRadioGenre(id, title, pictureUrl);
-                topRadioGenres.add(topRadioGenre);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        return topRadioGenres;
     }
-
-    // ===============================================================================
-
+    //---------------------------------------------------
 
     // Thêm phương thức để xóa dữ liệu từ SharedPreferences
     private void clearSharedPreferences() {
@@ -329,11 +294,128 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    // ============================== TOP GENRES RADIO =================================
+    private void fetchTopRadioGenres() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://api.deezer.com/radio");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                        String inputLine;
+                        StringBuilder response = new StringBuilder();
+                        while ((inputLine = in.readLine()) != null) {
+                            response.append(inputLine);
+                        }
+                        in.close();
+
+                        // Parse JSON and get top radio genres
+                        List<TopRadioGenre> topRadioGenres = parseTopRadioGenres(response.toString());
+
+                        // Update UI on the main thread
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                topRadioGenresData.addAll(topRadioGenres);
+                                topRadioGenresAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private List<TopRadioGenre> parseTopRadioGenres(String json) {
+        List<TopRadioGenre> topRadioGenres = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray data = jsonObject.getJSONArray("data");
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject radioGenreObject = data.getJSONObject(i);
+                String id = radioGenreObject.getString("id");
+                String title = radioGenreObject.getString("title");
+                String pictureUrl = radioGenreObject.getString("picture");
+
+                TopRadioGenre topRadioGenre = new TopRadioGenre(id, title, pictureUrl);
+                topRadioGenres.add(topRadioGenre);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return topRadioGenres;
+    }
+
+    // ================================TOP GENRE ARTIST===============================================
+    private void fetchArtists() {
+        DZService service = DeezerService.getService();
+        Call<JsonObject> call = service.getTopArtists();
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject jsonResponse = response.body();
+
+                    if (jsonResponse.has("artists")) {
+                        JsonObject tracksObject = jsonResponse.getAsJsonObject("artists");
+
+                        ArtistResponse artistData = new Gson().fromJson(tracksObject, ArtistResponse.class);
+                        artistList = artistData.getArtists();
+                        updateListView(artistList);
+                        recyclerViewTopArtist.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+                    } else {
+                        Log.e("ArtistFragment", "Response does not contain 'artists' field");
+                    }
+                } else {
+                    try {
+                        Log.e("ArtistFragment", "Error fetching artists: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.e("ArtistFragment", "Error fetching artists: " + t.getMessage());
+            }
+        });
+    }
+    private void updateListView(List<Artist> artists) {
+        artistAdapter = new ArtistAdapter(getContext(), artists, new ArtistAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Artist artist = artists.get(position);
+
+                Intent intent = new Intent(getActivity(), ArtistDetailActivity.class);
+                intent.putExtra("artist", artist);
+                startActivity(intent);
+            }
+        });
+
+        recyclerViewTopArtist.setAdapter(artistAdapter);
+    }
+    // ===============================================================================
+
     @Override
     public void onResume() {
         super.onResume();
 
         // Fetch and display the user's recently played tracks
         fetchRecentlyPlayedTracks();
+
+        // Load the image URI from SharedPreferences each time the fragment is resumed
+        String savedImageUri = loadImageUriFromSharedPreferences(userId);
+        if (savedImageUri != null && !savedImageUri.isEmpty()) {
+            Picasso.get().load(savedImageUri).into(profilePhoto);
+        }
     }
 }

@@ -151,6 +151,25 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
+            <!-- RecyclerView Artists -->
+            <TextView
+                android:id="@+id/tvTopArtists"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#5C8374"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:text="Top Artists" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTopArtist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="#040D12"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:paddingBottom="10dp"/>
+
             <!-- ListView Top Artists -->
 <!--            <TextView-->
 <!--                android:id="@+id/tvTopArtist"-->
