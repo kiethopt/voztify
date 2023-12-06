@@ -64,10 +64,6 @@ public class HomeFragment extends Fragment {
     private List<TopRadioGenre> topRadioGenresData;
     private TopRadioGenresAdapter topRadioGenresAdapter;
 
-    private RecyclerView rvRecentlyPlayed;
-    private RecentlyPlayedAdapter recentlyPlayedAdapter;
-    private List<History> recentlyPlayedList;
-
 
     private TextView emailTextView;
     private TextView nameTextView;
@@ -97,7 +93,6 @@ public class HomeFragment extends Fragment {
         bioTextView = view.findViewById(R.id.bioTextView);
         profilePhoto = view.findViewById(R.id.profilePhoto);
         recyclerViewTopArtist =view.findViewById(R.id.recyclerViewTopArtist);
-        rvRecentlyPlayed = view.findViewById(R.id.rvRecentlyPlayed);
 
         // Initialize RecyclerView, data list, and adapter
         RecyclerView recyclerViewTopRadioGenres = view.findViewById(R.id.rvTopRadioGenres);
@@ -118,20 +113,10 @@ public class HomeFragment extends Fragment {
         }
         //--------------------------------------------------
 
-        // Initialize the RecyclerView, data list, and adapter for Recently Played
-        rvRecentlyPlayed = view.findViewById(R.id.rvRecentlyPlayed);
-        LinearLayoutManager layoutManagerRV = new LinearLayoutManager(getActivity());
-        rvRecentlyPlayed.setLayoutManager(layoutManagerRV);
-
-        // Initialize the data list and the adapter
-        recentlyPlayedList = new ArrayList<>();
-        recentlyPlayedAdapter = new RecentlyPlayedAdapter(getActivity(), recentlyPlayedList);
-        rvRecentlyPlayed.setAdapter(recentlyPlayedAdapter);
 
         fetchArtists();
         fetchTopRadioGenres();
-        // Fetch and display the user's recently played tracks
-        fetchRecentlyPlayedTracks();
+
 
         // Xóa dữ liệu cũ từ SharedPreferences
         // clearSharedPreferences();
@@ -267,32 +252,7 @@ public class HomeFragment extends Fragment {
         return sharedPreferences.getString("profileImageUri_" + userId, null);
     }
 
-//Lịch sử nghe nhạc
-    private void fetchRecentlyPlayedTracks() {
-        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("user_history");
 
-        // Listen for changes in the user's listening history
-        historyRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                recentlyPlayedList.clear(); // Clear existing data
-
-                // Iterate through the history items and add them to the list
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    History history = snapshot.getValue(History.class);
-                    recentlyPlayedList.add(history);
-                }
-
-                // Notify the adapter that the data has changed
-                recentlyPlayedAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors during data retrieval
-            }
-        });
-    }
 
     // ============================== TOP GENRES RADIO =================================
     private void fetchTopRadioGenres() {
@@ -409,8 +369,6 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        // Fetch and display the user's recently played tracks
-        fetchRecentlyPlayedTracks();
 
         // Load the image URI from SharedPreferences each time the fragment is resumed
         String savedImageUri = loadImageUriFromSharedPreferences(userId);

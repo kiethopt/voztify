@@ -34,7 +34,8 @@ public class History {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        // Assuming the image identifier is stored in imageUrl
+        return  imageUrl ;
     }
 
     public void setImageUrl(String imageUrl) {

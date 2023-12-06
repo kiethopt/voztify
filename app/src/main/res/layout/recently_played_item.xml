@@ -3,32 +3,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
-
-    <TextView
-        android:id="@+id/titleTextView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_recent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="Song Title" />
+        app:cardCornerRadius="50dp"
+        android:elevation="10dp">
 
-    <TextView
-        android:id="@+id/artistTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:text="Artist Name" />
+        <ImageView
+            android:id="@+id/img_recentlyPlayed"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/timestampTextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/lay"
-        android:textSize="12sp"
-        android:text="Timestamp" />
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+
+        <!-- First half of the layout -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Song Title"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/artistTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist Name"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <!-- Second half of the layout -->
+        <TextView
+            android:id="@+id/timestampTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timestamp"
+            android:textColor="@color/lay"
+            android:textSize="12sp" />
+    </LinearLayout>
+
 
 </LinearLayout>

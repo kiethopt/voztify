@@ -4,9 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +40,10 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         holder.titleTextView.setText(history.getTitle());
         holder.artistTextView.setText(history.getArtist());
         holder.timestampTextView.setText(formatTimestamp(history.getTimestamp()));
+        // Load the image into the ImageView using Picasso (you need to add the Picasso library to your dependencies)
+
+        String imgUrl =  "https://e-cdns-images.dzcdn.net/images/cover" + "/" + history.getImageUrl() + "/120x120-000000-80-0-0.jpg";
+        Picasso.get().load(imgUrl).into(holder.imageView);
     }
 
     @Override
@@ -47,12 +55,14 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         public TextView titleTextView;
         public TextView artistTextView;
         public TextView timestampTextView;
+        public ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             artistTextView = itemView.findViewById(R.id.artistTextView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
+            imageView = itemView.findViewById(R.id.img_recentlyPlayed);
         }
     }
 

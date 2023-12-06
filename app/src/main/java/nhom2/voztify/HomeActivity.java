@@ -50,8 +50,8 @@ public class HomeActivity extends AppCompatActivity {
             } else if (itemId == R.id.action_explore) {
                 loadFragment(new ExploreFragment());
                 return true;
-            } else if (itemId == R.id.action_chart) {
-                loadFragment(new ChartFragment());
+            } else if (itemId == R.id.action_history) {
+                loadFragment(new HistoryFragment());
                 return true;
             } else if (itemId == R.id.action_search) {
                 loadFragment(new SearchFragment());
