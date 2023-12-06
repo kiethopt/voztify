@@ -120,19 +120,17 @@
 
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:background="#040D12">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-            <!-- RecyclerView Top Radio Genres -->
+            <!-- TextView Top Genres -->
             <TextView
                 android:id="@+id/tvTopRadioGenres"
                 android:layout_width="wrap_content"
@@ -149,11 +147,71 @@
                 android:layout_marginTop="5dp"
                 android:background="#040D12"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:paddingBottom="10dp"/>
+                android:paddingBottom="10dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <!-- ListView Top Artists -->
+<!--            <TextView-->
+<!--                android:id="@+id/tvTopArtist"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:text="Top Artist"-->
+<!--                android:textColor="#5C8374"-->
+<!--                android:textSize="18dp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <ListView-->
+<!--                android:id="@+id/lvTopArtists"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="130dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:background="#808080"-->
+<!--                android:divider="#FFFFFF"-->
+<!--                android:dividerHeight="1dp" />-->
+
+<!--            &lt;!&ndash; TextView Top Tracks &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/tvTopTracks"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textColor="#5C8374"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textSize="18dp"-->
+<!--                android:text="Top tracks" />-->
+
+<!--            &lt;!&ndash; ListView Top Tracks &ndash;&gt;-->
+<!--            <ListView-->
+<!--                android:id="@+id/lvTopTracks"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="130dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:background="#808080"-->
+<!--                android:divider="#FFFFFF"-->
+<!--                android:dividerHeight="1dp" />-->
+
+            <TextView
+                android:id="@+id/tvRecentlyPlayed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Recently Played"
+                android:textColor="#5C8374"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecentlyPlayed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:divider="#FFFFFF"
+                android:dividerHeight="1dp" />
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </LinearLayout>

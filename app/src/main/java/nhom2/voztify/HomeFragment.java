@@ -40,12 +40,17 @@ import java.util.Date;
 import java.util.List;
 
 import nhom2.voztify.Api.SpotifyApi;
+import nhom2.voztify.Class.History;
 
 public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerViewTopRadioGenres;
     private List<TopRadioGenre> topRadioGenresData;
     private TopRadioGenresAdapter topRadioGenresAdapter;
+
+    private RecyclerView rvRecentlyPlayed;
+    private RecentlyPlayedAdapter recentlyPlayedAdapter;
+    private List<History> recentlyPlayedList;
 
 
     private TextView emailTextView;
@@ -54,7 +59,8 @@ public class HomeFragment extends Fragment {
     private ImageView editProfileImageView, profilePhoto;
     private String userName;
     private TextView bioTextView;
-
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String userId = currentUser.getUid();
     // Thêm tên của SharedPreferences
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final int EDIT_PROFILE_REQUEST_CODE = 1;
@@ -73,6 +79,7 @@ public class HomeFragment extends Fragment {
         editProfileImageView = view.findViewById(R.id.editProfileImageView);
         bioTextView = view.findViewById(R.id.bioTextView);
         profilePhoto = view.findViewById(R.id.profilePhoto);
+        rvRecentlyPlayed = view.findViewById(R.id.rvRecentlyPlayed);
 
         // Initialize RecyclerView, data list, and adapter
         RecyclerView recyclerViewTopRadioGenres = view.findViewById(R.id.rvTopRadioGenres);
@@ -88,8 +95,32 @@ public class HomeFragment extends Fragment {
 
 
 
+
+
+
+        // Initialize the RecyclerView, data list, and adapter for Recently Played
+        rvRecentlyPlayed = view.findViewById(R.id.rvRecentlyPlayed);
+        LinearLayoutManager layoutManagerRV = new LinearLayoutManager(getActivity());
+        rvRecentlyPlayed.setLayoutManager(layoutManagerRV);
+
+        // Initialize the data list and the adapter
+        recentlyPlayedList = new ArrayList<>();
+        recentlyPlayedAdapter = new RecentlyPlayedAdapter(getActivity(), recentlyPlayedList);
+        rvRecentlyPlayed.setAdapter(recentlyPlayedAdapter);
+
+        // Fetch and display the user's recently played tracks
+        fetchRecentlyPlayedTracks();
+
+
+
+
+
+
+
+
+
         // Xóa dữ liệu cũ từ SharedPreferences
-        clearSharedPreferences();
+       // clearSharedPreferences();
 
         // Hiển thị thông tin người dùng mới
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -252,7 +283,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
     private String getFormattedDateJoined(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(new Date(timestamp));
@@ -270,5 +300,40 @@ public class HomeFragment extends Fragment {
         // Đọc đường dẫn ảnh từ SharedPreferences với key là userId
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getString("profileImageUri_" + userId, null);
+    }
+
+//Lịch sử nghe nhạc
+    private void fetchRecentlyPlayedTracks() {
+        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("user_history");
+
+        // Listen for changes in the user's listening history
+        historyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                recentlyPlayedList.clear(); // Clear existing data
+
+                // Iterate through the history items and add them to the list
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    History history = snapshot.getValue(History.class);
+                    recentlyPlayedList.add(history);
+                }
+
+                // Notify the adapter that the data has changed
+                recentlyPlayedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors during data retrieval
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Fetch and display the user's recently played tracks
+        fetchRecentlyPlayedTracks();
     }
 }

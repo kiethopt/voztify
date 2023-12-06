@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Kiểm tra trạng thái đăng nhập
         if (!isLoggedIn()) {
-            // Nếu không đăng nhập, chuyển hướng đến Regis
+            // Nếu chưa đăng nhập, chuyển hướng đến Regis
             startActivity(new Intent(HomeActivity.this, Register.class));
             finish();
         }
@@ -107,14 +107,15 @@ public class HomeActivity extends AppCompatActivity {
     private boolean isLoggedIn() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARE_PREFS, MODE_PRIVATE);
         // Kiểm tra nếu thời gian hiện tại nhỏ hơn thời gian hết hạn
-        long expirationTime = sharedPreferences.getLong("EXPIRATION_TIME", 0);
-       // boolean isExpired = System.currentTimeMillis() > expirationTime;!isExpired &&
-        return  sharedPreferences.getString(LOGIN_STATE_KEY, "").equals("true");
-
+//        long expirationTime = sharedPreferences.getLong("EXPIRATION_TIME", 0);
+//        boolean isExpired = System.currentTimeMillis() > expirationTime;
+//        return !isExpired && sharedPreferences.getString(LOGIN_STATE_KEY, "").equals("true");
+        return sharedPreferences.getString(LOGIN_STATE_KEY,"").equals("true");
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString(LOGIN_STATE_KEY, "true");
+//
+//    }
 }

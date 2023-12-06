@@ -31,6 +31,16 @@ public class Register extends AppCompatActivity {
         bthSignUp = findViewById(R.id.bthSignUp);
         btnLoginTrans = findViewById(R.id.btnLoginTrans);
 
+        // Kiểm tra đã đăng nhập và thời gian hết hạn
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARE_PREFS, MODE_PRIVATE);
+        String check = sharedPreferences.getString(LOGIN_STATE_KEY, "");
+
+        if (check.equals("true") ) {
+            // Nếu trạng thái đăng nhập còn hiệu lực, chuyển đến HomeActivity
+            Toast.makeText(this, "Log in Success!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        }
         bthSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
