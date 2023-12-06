@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
                 loadFragment(new SearchFragment());
                 return true;
             } else if (itemId == R.id.action_social) {
-                loadFragment(new SocialFragment());
+                loadFragment(new TabViewPlaylistFragment());
                 return true;
             }
 

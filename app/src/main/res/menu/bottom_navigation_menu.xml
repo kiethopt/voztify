@@ -23,7 +23,7 @@
 
         <item
             android:id="@+id/action_social"
-            android:title="Social"
-            android:icon="@drawable/baseline_diversity_3_24"/>
+            android:title="Library"
+            android:icon="@drawable/baseline_library_music_24"/>
 
     </menu>

@@ -122,6 +122,7 @@ public class TabViewPlaylistFragment extends Fragment {
                     .child(userId).child("playlists");
 
             String playlistId = userPlaylistRef.push().getKey();
+            playlist.setId(playlistId);
             userPlaylistRef.child(playlistId).setValue(playlist);
         }
     }

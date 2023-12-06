@@ -41,7 +41,6 @@ public class ExploreFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new TabViewTracksFragment(), "Bản nhạc");
         adapter.addFragment(new TabViewArtistsFragment(), "Nghệ sĩ");
-        adapter.addFragment(new TabViewPlaylistFragment(), "Playlist");
         viewPager.setAdapter(adapter);
     }
 

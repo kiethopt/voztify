@@ -1,7 +1,9 @@
 package nhom2.voztify;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -35,22 +37,61 @@ public class PlaylistDetailActivity extends AppCompatActivity {
     TextView tvYourNameDetail;
     ImageButton imgButtonShowDialog;
     String playlistId;
+
+
+
+    Toolbar toolbar;
+
+
+
+
+
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_detail);
+        LinearLayout addSongLayout = findViewById(R.id.layout_add_song);
+        ImageButton imgBtnAddSong = findViewById(R.id.img_btn_add_song_playlist);
+
+        toolbar = findViewById(R.id.toolbar4sd);
+
+        setSupportActionBar(toolbar);
+        // Tắt tiêu đề mặc định của ActionBar
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // Hiển thị nút back
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Set custom drawable as the navigation icon
+        toolbar.setNavigationIcon(R.drawable.outline_arrow_back_ios_24);
+        // Xử lý sự kiện khi nút back được nhấn
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         imgPlaylistDetail = findViewById(R.id.img_playlist_detail);
         tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
         tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
         imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
 
+
+        imgBtnAddSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PlaylistDetailActivity.this, ActivityInsertSongPlaylist.class);
+                startActivity(intent);
+            }
+        });
         imgButtonShowDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialog();
+
 
             }
         });
@@ -88,7 +129,17 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         editLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(PlaylistDetailActivity.this, "Edit is clicked", Toast.LENGTH_SHORT).show();
+                String playlistId = getIntent().getStringExtra("playlistId");
+                String playlistName = getIntent().getStringExtra("playlistName");
+                Intent intent = new Intent(PlaylistDetailActivity.this, CreatePlaylistActivity.class);
+                intent.putExtra("playlistId", playlistId);
+                intent.putExtra("playlistName", playlistName);
+
+                // Chuyển sang CreatePlaylistActivity
+                startActivity(intent);
+
+                // Đóng dialog
+                dialog.dismiss();
             }
         });
         deleteLayout.setOnClickListener(new View.OnClickListener() {
@@ -187,40 +238,27 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                 .child(currentUser.getUid()).child("playlists");
 
         // Kiểm tra xem playlistId có tồn tại không trước khi xóa
-        userPlaylistRef.child(playlistId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Nút con tồn tại, tiến hành xóa
-                    userPlaylistRef.child(playlistId).removeValue()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // Xóa thành công
-                                    Intent resultIntent = new Intent();
-                                    resultIntent.putExtra("deletedPlaylistId", playlistId);
-                                    setResult(Activity.RESULT_OK, resultIntent);
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Xóa thất bại, xử lý theo ý của bạn
-                                    Toast.makeText(PlaylistDetailActivity.this, "Failed to delete playlist: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                } else {
-                    Toast.makeText(PlaylistDetailActivity.this, "Playlist not found", Toast.LENGTH_SHORT).show();
+        if (playlistId != null && !playlistId.isEmpty()) {
+            userPlaylistRef.child(playlistId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // ...
+                    // Xóa playlist từ Firebase
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi nếu có
-                Toast.makeText(PlaylistDetailActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // ...
+                }
+            });
+        } else {
+            Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist ID", Toast.LENGTH_SHORT).show();
+
+        }
     }
-
+    @Override
+    public void onBackPressed() {
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        super.onBackPressed();
+    }
 }
