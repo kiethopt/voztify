@@ -2,6 +2,7 @@ package nhom2.voztify;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -37,6 +38,8 @@ public class PlaylistDetailActivity extends AppCompatActivity {
     ImageButton imgButtonShowDialog;
     Toolbar toolbar;
     String playlistId;
+    private RecyclerView recyclerView;
+    private PlaylistAdapter playlistAdapter;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
     @Override

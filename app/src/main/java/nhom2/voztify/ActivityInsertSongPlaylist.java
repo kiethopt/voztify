@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.gson.JsonObject;
 
@@ -31,7 +33,6 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
     private EditText searchSongEditText;
     private RecyclerView recyclerView;
     private SearchTrackAdapter trackAdapter;
-
     private DZService dzService;
 
     @Override
@@ -41,6 +42,7 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
         searchSongEditText = findViewById(R.id.search_song);
         dzService = DeezerService.getService();
         recyclerView = findViewById(R.id.recycler_view_search_song);
+
         // Set up RecyclerView and adapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -51,17 +53,44 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
         searchSongEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
-
+//                String partialQuery = charSequence.toString().trim();
+//                if (!partialQuery.isEmpty()) {
+//                    searchTrack(partialQuery);
+//                } else {
+//                    trackAdapter.updateTracks(new ArrayList<>());
+//                    showEmptyResultImage(true);
+//                }
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
+//                    trackAdapter.updateTracks(new ArrayList<>());
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                searchTrack(editable.toString());
+                String trackTitle = editable.toString().trim();
+
+                if (!trackTitle.isEmpty()) {
+                    searchTrack(trackTitle);
+                } else {
+                    // If the EditText is empty, clear the RecyclerView and show the empty image
+                    trackAdapter.updateTracks(new ArrayList<>());
+                }
+            }
+        });
+        trackAdapter.setTrackClickListener(new SearchTrackAdapter.OnTrackClickListener() {
+            @Override
+            public void onTrackClick(Track track) {
+                addTrackToPlaylist(track);
+
+            }
+
+            private void addTrackToPlaylist(Track track) {
+//                play.addTrack(track);
+//                playlistAdapter.notifyDataSetChanged();
+
             }
         });
     }
@@ -84,6 +113,7 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             }
         });
     }
+
     private void updateRecyclerView(List<Track> tracks) {
         trackAdapter.updateTracks(tracks);
     }
