@@ -43,8 +43,9 @@ public interface DZService {
 
     @GET("/album/{album_id}/tracks")
     Call<TrackResponse> getAlbumTracks(@Path("album_id") String albumId);
-    @GET("/v1/search")
-    Call<JsonObject> searchSongs(@Query("q") String query, @Query("type") String type);
+    @GET("/search/track")
+    Call<TrackResponse> searchTrack(@Query("q") String trackTitle);
+
 
 }
 

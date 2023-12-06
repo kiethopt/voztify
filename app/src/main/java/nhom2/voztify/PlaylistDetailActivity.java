@@ -3,7 +3,6 @@ package nhom2.voztify;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -36,27 +35,23 @@ public class PlaylistDetailActivity extends AppCompatActivity {
     TextView tvPlaylistDetailName;
     TextView tvYourNameDetail;
     ImageButton imgButtonShowDialog;
-    String playlistId;
-
-
-
     Toolbar toolbar;
-
-
-
-
-
+    String playlistId;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_detail);
         LinearLayout addSongLayout = findViewById(R.id.layout_add_song);
         ImageButton imgBtnAddSong = findViewById(R.id.img_btn_add_song_playlist);
-
         toolbar = findViewById(R.id.toolbar4sd);
+
+
+        imgPlaylistDetail = findViewById(R.id.img_playlist_detail);
+        tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
+        tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
+        imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
 
         setSupportActionBar(toolbar);
         // Tắt tiêu đề mặc định của ActionBar
@@ -74,11 +69,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         });
 
 
-        imgPlaylistDetail = findViewById(R.id.img_playlist_detail);
-        tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
-        tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
-        imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
-
 
         imgBtnAddSong.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +81,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showDialog();
-
 
             }
         });
@@ -129,18 +118,16 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         editLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String playlistId = getIntent().getStringExtra("playlistId");
-                String playlistName = getIntent().getStringExtra("playlistName");
-                Intent intent = new Intent(PlaylistDetailActivity.this, CreatePlaylistActivity.class);
-                intent.putExtra("playlistId", playlistId);
-                intent.putExtra("playlistName", playlistName);
-
-                // Chuyển sang CreatePlaylistActivity
-                startActivity(intent);
-
-                // Đóng dialog
-                dialog.dismiss();
-            }
+                // Open ActivityUpdatePlaylist with the playlist name
+                String playlistName = tvPlaylistDetailName.getText().toString();
+                if (!playlistName.isEmpty()) {
+                    Intent updateIntent = new Intent(PlaylistDetailActivity.this, ActivityUpdatePlaylist.class);
+                    updateIntent.putExtra("playlistNameToUpdate", playlistName);
+                    startActivity(updateIntent);
+                } else {
+                    Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist name", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();    }
         });
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,9 +243,5 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
         }
     }
-    @Override
-    public void onBackPressed() {
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        super.onBackPressed();
-    }
+
 }

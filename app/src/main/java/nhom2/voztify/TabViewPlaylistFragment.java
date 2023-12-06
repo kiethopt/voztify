@@ -100,7 +100,7 @@ public class TabViewPlaylistFragment extends Fragment {
                 String userId = data.getStringExtra("userId");
                 String yourName = data.getStringExtra("yourName");
 
-                Playlist newPlaylist = new Playlist(R.drawable.ai, playlistName, yourName, userId);
+                Playlist newPlaylist = new Playlist(R.drawable.logomusic, playlistName, yourName, userId);
 
                 // Lưu playlist mới vào Firebase
                 savePlaylistToFirebase(newPlaylist);

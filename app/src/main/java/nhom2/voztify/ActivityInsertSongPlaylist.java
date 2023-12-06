@@ -19,6 +19,7 @@ import java.util.List;
 import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
 import nhom2.voztify.Class.Song;
+import nhom2.voztify.Class.Track;
 import nhom2.voztify.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +30,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ActivityInsertSongPlaylist extends AppCompatActivity {
     private EditText searchSongEditText;
     private RecyclerView recyclerView;
-    private SongAdapter songAdapter;
+    private SearchTrackAdapter trackAdapter;
+
     private DZService dzService;
 
     @Override
@@ -42,8 +44,9 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
         // Set up RecyclerView and adapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        songAdapter = new SongAdapter(this, new ArrayList<>());
-        recyclerView.setAdapter(songAdapter);
+        trackAdapter = new SearchTrackAdapter(this, new ArrayList<>());
+        recyclerView.setAdapter(trackAdapter);
+
         // Set up the TextWatcher for real-time search
         searchSongEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -53,48 +56,37 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                performSearch(charSequence.toString());
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                searchTrack(editable.toString());
             }
         });
     }
-    private void performSearch(String query) {
-        // Use Retrofit to make a request to the Deezer API for song search
-        Call<JsonObject> call = dzService.searchSongs(query, "track");
-        call.enqueue(new Callback<JsonObject>() {
+    private void searchTrack(String trackTitle) {
+        Call<TrackResponse> call = dzService.searchTrack(trackTitle);
+        call.enqueue(new Callback<TrackResponse>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    JsonObject jsonObject = response.body();
-
-                    // Parse the JSON response to get a list of songs
-                    List<Song> songs = parseJsonResponse(jsonObject);
-
-                    // Update the RecyclerView with the list of songs
-                    updateRecyclerView(songs);
+            public void onResponse(Call<TrackResponse> call, Response<TrackResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Track> tracks = response.body().getTracks();
+                    updateRecyclerView(tracks);
                 } else {
                     // Handle unsuccessful response
                 }
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<TrackResponse> call, Throwable t) {
                 // Handle failure
             }
         });
     }
-    private List<Song> parseJsonResponse(JsonObject jsonObject){
+    private void updateRecyclerView(List<Track> tracks) {
+        trackAdapter.updateTracks(tracks);
+    }
 
-        return null;
-    }
-    private void updateRecyclerView(List<Song> songs) {
-        // Implement logic to update the RecyclerView with the list of songs
-        // Use the songs list to set up your RecyclerView adapter
-        songAdapter.updateSongs(songs);
-    }
 
 }

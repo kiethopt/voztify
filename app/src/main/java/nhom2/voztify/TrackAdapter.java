@@ -57,6 +57,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
+    public void update(List<Track> newTracks) {
+        this.tracks.clear();
+        this.tracks.addAll(newTracks);
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

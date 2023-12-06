@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:src="@drawable/baseline_add_circle_outline_black_24"
             android:background="@color/white"
-            android:padding="8dp"
             android:layout_marginLeft="200dp"/>
 
     </LinearLayout>

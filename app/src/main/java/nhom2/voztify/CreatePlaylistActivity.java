@@ -30,16 +30,6 @@ public class CreatePlaylistActivity extends AppCompatActivity {
         imgButtonBack = (ImageButton) findViewById(R.id.imageButton_back);
         edtCreatePlaylist = (EditText) findViewById(R.id.edt_create_playlist);
         btnCreatePlaylist = (Button) findViewById(R.id.btn_Create);
-        Intent intent = getIntent();
-        if (intent != null) {
-            String playlistId = intent.getStringExtra("playlistId");
-            String playlistName = intent.getStringExtra("playlistName");
-
-            // Điền dữ liệu vào EditText
-            if (playlistName != null && !playlistName.isEmpty()) {
-                edtCreatePlaylist.setText(playlistName);
-            }
-        }
 
         imgButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
