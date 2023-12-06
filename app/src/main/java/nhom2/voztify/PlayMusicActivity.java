@@ -14,6 +14,8 @@
     
     import androidx.appcompat.app.AppCompatActivity;
 
+    import com.google.firebase.auth.FirebaseAuth;
+    import com.google.firebase.auth.FirebaseUser;
     import com.google.firebase.database.DatabaseReference;
     import com.google.firebase.database.FirebaseDatabase;
     import com.google.firebase.database.ServerValue;
@@ -36,8 +38,12 @@
         private TextView songTitleTextView, songArtistTextView, startTime, endTime;
         private SeekBar seekBar;
         private String currentTrackTitle; // Added variable to keep track of the current track title
+        // For Realtime Database
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        // Get the current user ID
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser.getUid();
 
-    
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -53,7 +59,8 @@
             track = (Track) getIntent().getSerializableExtra("Track");
             trackList = (List<Track>) getIntent().getSerializableExtra("TracksList");
             currentTrackTitle = track.getTitle();
-    
+            // Update history for the current track
+            updateHistory(track, userId);
             if (track != null && track.getMd5_image() != null) {
                 String imageUrl = "https://e-cdns-images.dzcdn.net/images/cover/" + track.getMd5_image() + "/250x250-000000-80-0-0.jpg";
     
@@ -180,50 +187,56 @@
                 }
             }
         };
-    
+
         private void loadPreviousTrack() {
             int currentIndex = -1;
-    
+
             for (int i = 0; i < trackList.size(); i++) {
                 if (trackList.get(i).getTitle().equalsIgnoreCase(currentTrackTitle)) {
                     currentIndex = i;
                     break;
                 }
             }
-    
+
             if (currentIndex > 0) {
                 Track previousTrack = trackList.get(currentIndex - 1);
                 currentTrackTitle = previousTrack.getTitle();
                 startNewTrack(previousTrack);
+                updateHistory(previousTrack,userId); // Update history for the previous track
             } else {
                 Track lastTrack = trackList.get(trackList.size() - 1);
                 currentTrackTitle = lastTrack.getTitle();
                 startNewTrack(lastTrack);
+                updateHistory(lastTrack,userId); // Update history for the last track
             }
         }
-    
+
         private void loadNextTrack() {
             int currentIndex = -1;
-    
+
             for (int i = 0; i < trackList.size(); i++) {
                 if (trackList.get(i).getTitle().equalsIgnoreCase(currentTrackTitle)) {
                     currentIndex = i;
                     break;
                 }
             }
-    
+
             if (currentIndex >= 0 && currentIndex < trackList.size() - 1) {
                 Track nextTrack = trackList.get(currentIndex + 1);
                 currentTrackTitle = nextTrack.getTitle();
                 startNewTrack(nextTrack);
+                updateHistory(nextTrack,userId); // Update history for the next track
             } else if (currentIndex == trackList.size() - 1) {
                 Track firstTrack = trackList.get(0);
                 currentTrackTitle = firstTrack.getTitle();
                 startNewTrack(firstTrack);
+                updateHistory(firstTrack,userId); // Update history for the first track
             } else {
                 Toast.makeText(getApplicationContext(), "Invalid track index", Toast.LENGTH_SHORT).show();
             }
         }
+
+
     
         private void startNewTrack(Track newTrack) {
             if (mediaPlayer != null) {
@@ -253,6 +266,7 @@
     
             // Cập nhật lại UI cho mới.
             updateUI(newTrack);
+            updateHistory(newTrack,userId);
         }
     
         private void updateUI(Track track) {
@@ -266,7 +280,16 @@
                 imgViewSong.setImageResource(R.drawable.silver);
             }
         }
-    
+        private void updateHistory(Track track, String userId) {
+            // Get the current timestamp
+            String historyId = databaseReference.child("user_history").child(userId).push().getKey();
+
+            // Create a History object
+            History history = new History(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP);
+
+            // Save the History object to Firebase
+            databaseReference.child(userId).child("user_history").child(historyId).setValue(history);
+        }
         @Override
         protected void onDestroy() {
             super.onDestroy();

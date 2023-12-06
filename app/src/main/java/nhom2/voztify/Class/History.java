@@ -4,13 +4,13 @@ public class History {
     private String title;
     private String artist;
     private String imageUrl;  // Add this field for the image URL
-    private long timestamp;
+    private Object timestamp;
 
     // Empty constructor for Firebase
     public History() {
     }
 
-    public History(String title, String artist, String imageUrl, long timestamp) {
+    public History(String title, String artist, String imageUrl, Object timestamp) {
         this.title = title;
         this.artist = artist;
         this.imageUrl = imageUrl;
@@ -42,11 +42,11 @@ public class History {
         this.imageUrl = imageUrl;
     }
 
-    public long getTimestamp() {
+    public Object getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Object timestamp) {
         this.timestamp = timestamp;
     }
 }

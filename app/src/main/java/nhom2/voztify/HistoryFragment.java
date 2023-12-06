@@ -88,6 +88,9 @@ public class HistoryFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     History history = snapshot.getValue(History.class);
                     recentlyPlayedList.add(history);
+                    // Set the sorted history list to the adapter
+                    recentlyPlayedAdapter.setHistoryList(recentlyPlayedList);
+
                 }
 
                 // Notify the adapter that the data has changed

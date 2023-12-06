@@ -161,7 +161,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         String historyId = databaseReference.child("user_history").child(userId).push().getKey();
 
         // Create a History object
-        History history = new History(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP.size());
+        History history = new History(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP);
 
         // Save the History object to Firebase
         databaseReference.child(userId).child("user_history").child(historyId).setValue(history);
