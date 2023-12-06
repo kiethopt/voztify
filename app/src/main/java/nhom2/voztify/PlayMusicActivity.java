@@ -283,12 +283,13 @@
         private void updateHistory(Track track, String userId) {
             // Get the current timestamp
             String historyId = databaseReference.child("user_history").child(userId).push().getKey();
+            String historyIde = track.getId();
 
             // Create a History object
             History history = new History(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP);
 
             // Save the History object to Firebase
-            databaseReference.child(userId).child("user_history").child(historyId).setValue(history);
+            databaseReference.child(userId).child("user_history").child(historyIde).setValue(history);
         }
         @Override
         protected void onDestroy() {

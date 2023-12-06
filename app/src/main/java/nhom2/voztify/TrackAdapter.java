@@ -38,12 +38,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
     private static float textSize = 20;
     private static int songArtistVisibility = View.VISIBLE;
 
-    // For Realtime Database
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-    // Get the current user ID
-    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    String userId = currentUser.getUid();
-
     public TrackAdapter(Context context, List<Track> tracks, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.tracks = tracks;
@@ -101,8 +95,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             public void onClick(View v) {
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(v, position);
-                    // Log the song to Firebase when a track is clicked
-                    logSongToFirebase(track,userId);
                 }
             }
         });
@@ -155,16 +147,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             songTitle = itemView.findViewById(R.id.song_title);
             songArtist = itemView.findViewById(R.id.song_artist);
         }
-    }
-
-    private void logSongToFirebase(Track track, String userId) {
-        String historyId = databaseReference.child("user_history").child(userId).push().getKey();
-
-        // Create a History object
-        History history = new History(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP);
-
-        // Save the History object to Firebase
-        databaseReference.child(userId).child("user_history").child(historyId).setValue(history);
     }
 
 }
