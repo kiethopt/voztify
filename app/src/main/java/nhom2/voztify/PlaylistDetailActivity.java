@@ -56,6 +56,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
         tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
         imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
+        
 
         setSupportActionBar(toolbar);
         // Tắt tiêu đề mặc định của ActionBar
@@ -78,9 +79,12 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PlaylistDetailActivity.this, ActivityInsertSongPlaylist.class);
+                intent.putExtra("playlistId", playlistId);  // Pass the playlistId to the new activity
                 startActivity(intent);
             }
         });
+
+
         imgButtonShowDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,6 +100,10 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             String yourName = intent.getStringExtra("yourName");
             int imageResourceId = intent.getIntExtra("imageResourceId", 0);  // Default value is 0
 
+            // Set the current playlist ID
+
+            playlistId = intent.getStringExtra("playlistId");
+
             // Set the received data to the corresponding views
             tvPlaylistDetailName.setText(playlistName);
             tvYourNameDetail.setText(yourName);
@@ -104,7 +112,41 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
         }
     }
+    //
+    private void getPlaylistIdFromFirebase() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+
+            DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance()
+                    .getReference("users")
+                    .child(userId)
+                    .child("playlists");
+
+            userPlaylistRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Iterate through the playlists
+                    for (DataSnapshot playlistSnapshot : dataSnapshot.getChildren()) {
+                        playlistId = playlistSnapshot.getKey();
+
+                        // Now you have the playlistId, you can use it as needed
+                        // For example, you might set it to a member variable for later use
+                        // playlistId = ...
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle errors
+                }
+            });
+        }
+    }
+
+    //
     private void showDialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -156,6 +198,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
+    //
     private void getPlaylistIdAndDelete() {
         if (currentUser != null) {
             String userId = currentUser.getUid();
@@ -186,26 +229,30 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance().getReference("users")
                 .child(currentUser.getUid()).child("playlists");
 
-        // Kiểm tra xem playlistId có tồn tại không trước khi xóa
+        // Check if playlistId exists before deleting
         if (playlistId != null && !playlistId.isEmpty()) {
-            userPlaylistRef.child(playlistId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // ...
-                    // Xóa playlist từ Firebase
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // ...
-                }
-            });
+            // Remove the playlist from the user's playlists
+            userPlaylistRef.child(playlistId).removeValue()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Deletion successful
+                            Toast.makeText(PlaylistDetailActivity.this, "Playlist deleted successfully", Toast.LENGTH_SHORT).show();
+                            finish();  // You might want to close the activity after deletion
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle the failure
+                            Toast.makeText(PlaylistDetailActivity.this, "Failed to delete playlist", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         } else {
             Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist ID", Toast.LENGTH_SHORT).show();
-
         }
     }
-
+    //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

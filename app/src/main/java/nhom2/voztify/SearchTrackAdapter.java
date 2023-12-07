@@ -60,6 +60,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
             holder.trackImage.setImageResource(R.drawable.silver);
             holder.trackImage.clearAnimation(); // Clear animation if not needed
         }
+
     }
 
     public interface OnTrackClickListener {

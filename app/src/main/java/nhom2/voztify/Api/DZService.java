@@ -49,7 +49,8 @@ public interface DZService {
     Call<TrackResponse> searchTrack(@Query("q") String trackTitle);
     @GET("/radio/top")
     Call<DeezerResponse> getTopRadios();
-
+    @GET("/track/{track_id}")
+    Call<Track> getTrack(@Path("track_id") String trackId);
 
 }
 

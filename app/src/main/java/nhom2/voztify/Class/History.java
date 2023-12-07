@@ -16,7 +16,11 @@ public class History {
         this.imageUrl = imageUrl;
         this.timestamp = timestamp;
     }
-
+    public History(String title, String artist, String imageUrl) {
+        this.title = title;
+        this.artist = artist;
+        this.imageUrl = imageUrl;
+    }
     public String getTitle() {
         return title;
     }

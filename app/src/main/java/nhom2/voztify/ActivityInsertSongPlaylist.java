@@ -1,10 +1,12 @@
 package nhom2.voztify;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,14 +14,29 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
+import nhom2.voztify.Class.Artist;
+import nhom2.voztify.Class.History;
 import nhom2.voztify.Class.Song;
 import nhom2.voztify.Class.Track;
 import nhom2.voztify.R;
@@ -49,6 +66,12 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
         trackAdapter = new SearchTrackAdapter(this, new ArrayList<>());
         recyclerView.setAdapter(trackAdapter);
 
+        trackAdapter.setTrackClickListener(new SearchTrackAdapter.OnTrackClickListener() {
+            @Override
+            public void onTrackClick(Track track) {
+                addTrackToFirebasePlaylist(getActualPlaylistId(), track);
+            }
+        });
         // Set up the TextWatcher for real-time search
         searchSongEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -80,20 +103,33 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
                 }
             }
         });
-        trackAdapter.setTrackClickListener(new SearchTrackAdapter.OnTrackClickListener() {
-            @Override
-            public void onTrackClick(Track track) {
-                addTrackToPlaylist(track);
-
-            }
-
-            private void addTrackToPlaylist(Track track) {
-//                play.addTrack(track);
-//                playlistAdapter.notifyDataSetChanged();
-
-            }
-        });
     }
+    private String getActualPlaylistId() {
+        // Implement your logic to retrieve the actual playlistId
+        // For example, you might receive it through an intent
+        return getIntent().getStringExtra("playlistId");
+    }
+
+    private void addTrackToFirebasePlaylist(String playlistId, Track track) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+
+            DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("users")
+                    .child(userId).child("playlists").child(playlistId).child("song of playlist");
+
+            String trackId = playlistRef.push().getKey();
+
+
+            // Save track information to the playlist
+            playlistRef.child(trackId).setValue(track);
+        }
+    }
+
+
+
     private void searchTrack(String trackTitle) {
         Call<TrackResponse> call = dzService.searchTrack(trackTitle);
         call.enqueue(new Callback<TrackResponse>() {
