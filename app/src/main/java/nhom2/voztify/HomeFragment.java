@@ -43,6 +43,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -314,6 +315,8 @@ public class HomeFragment extends Fragment {
 
 
     private void updateTrackListView(List<Track> tracks) {
+
+        Collections.reverse(tracks);
         tracksAdapter = new TracksAdapter(context, tracks, new TracksAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -341,6 +344,10 @@ public class HomeFragment extends Fragment {
                     if (deezerResponse != null) {
                         // Hiển thị danh sách Top Radio trong RecyclerView
                         List<DeezerRadio> topRadios = deezerResponse.getData();
+
+                        // Reverse the order of the list
+                        Collections.reverse(topRadios);
+
                         radioAdapter = new RadioAdapter(getContext(), topRadios);
                         recyclerViewTopRadio.setAdapter(radioAdapter);
                     }
@@ -353,6 +360,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 
     // ============================== TOP GENRES RADIO =================================
     private void fetchTopRadioGenres() {
@@ -398,7 +406,7 @@ public class HomeFragment extends Fragment {
         try {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray data = jsonObject.getJSONArray("data");
-            for (int i = 0; i < data.length(); i++) {
+            for (int i = data.length() - 1; i >= 0; i--) {
                 JSONObject radioGenreObject = data.getJSONObject(i);
                 String id = radioGenreObject.getString("id");
                 String title = radioGenreObject.getString("title");
@@ -412,6 +420,7 @@ public class HomeFragment extends Fragment {
         }
         return topRadioGenres;
     }
+
 
     // ================================TOP GENRE ARTIST===============================================
     private void fetchArtists() {
@@ -450,6 +459,7 @@ public class HomeFragment extends Fragment {
         });
     }
     private void updateListView(List<Artist> artists) {
+        Collections.reverse(artists);
         artistAdapter = new ArtistAdapter(getContext(), artists, new ArtistAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
