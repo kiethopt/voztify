@@ -9,6 +9,7 @@ import nhom2.voztify.ArtistAlbumsResponse;
 import nhom2.voztify.ArtistSearchResponse;
 import nhom2.voztify.ArtistTracksResponse;
 import nhom2.voztify.Class.Track;
+import nhom2.voztify.DeezerResponse;
 import nhom2.voztify.RelatedArtistsResponse;
 import nhom2.voztify.TrackResponse;
 import nhom2.voztify.TrendingAlbumResponse;
@@ -16,6 +17,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface DZService {
     @GET("/editorial/0/charts")
@@ -45,6 +47,8 @@ public interface DZService {
     Call<TrackResponse> getAlbumTracks(@Path("album_id") String albumId);
     @GET("/search/track")
     Call<TrackResponse> searchTrack(@Query("q") String trackTitle);
+    @GET("/radio/top")
+    Call<DeezerResponse> getTopRadios();
 
 
 }

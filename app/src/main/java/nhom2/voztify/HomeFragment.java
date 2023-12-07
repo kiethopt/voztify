@@ -58,12 +58,13 @@ import android.Manifest;
 
 public class HomeFragment extends Fragment {
 
+    private RecyclerView recyclerViewTopRadio;
+    private RadioAdapter radioAdapter;
     private RecyclerView recyclerViewTopArtist;
     private ArtistAdapter artistAdapter;
     private List<Artist> artistList;
     private List<TopRadioGenre> topRadioGenresData;
     private TopRadioGenresAdapter topRadioGenresAdapter;
-
 
     private TextView emailTextView;
     private TextView nameTextView;
@@ -93,16 +94,21 @@ public class HomeFragment extends Fragment {
         bioTextView = view.findViewById(R.id.bioTextView);
         profilePhoto = view.findViewById(R.id.profilePhoto);
         recyclerViewTopArtist =view.findViewById(R.id.recyclerViewTopArtist);
+        recyclerViewTopRadio = view.findViewById(R.id.recyclerViewTopRadio);
+
+
+        LinearLayoutManager layoutManagerRadio = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewTopRadio.setLayoutManager(layoutManagerRadio);
 
         // Initialize RecyclerView, data list, and adapter
-        RecyclerView recyclerViewTopRadioGenres = view.findViewById(R.id.rvTopRadioGenres);
+        RecyclerView recyclerViewTopGenres = view.findViewById(R.id.rvTopGenres);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewTopRadioGenres.setLayoutManager(layoutManager);
+        recyclerViewTopGenres.setLayoutManager(layoutManager);
 
         // Initialize the data list and the adapter
         topRadioGenresData = new ArrayList<>();
         topRadioGenresAdapter = new TopRadioGenresAdapter(topRadioGenresData);
-        recyclerViewTopRadioGenres.setAdapter(topRadioGenresAdapter);
+        recyclerViewTopGenres.setAdapter(topRadioGenresAdapter);
 
         // Cấp quyền để hình ảnh không mất khi đăng nhập lại
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -113,13 +119,14 @@ public class HomeFragment extends Fragment {
         }
         //--------------------------------------------------
 
-
+        // Gọi API để lấy danh sách Top Radio
+        loadTopRadio();
         fetchArtists();
         fetchTopRadioGenres();
 
 
         // Xóa dữ liệu cũ từ SharedPreferences
-        // clearSharedPreferences();
+        clearSharedPreferences();
 
         // Hiển thị thông tin người dùng mới
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -252,7 +259,31 @@ public class HomeFragment extends Fragment {
         return sharedPreferences.getString("profileImageUri_" + userId, null);
     }
 
+    //===================top radio================
+    private void loadTopRadio() {
+        DZService dzService = DeezerService.getService();
+        Call<DeezerResponse> call = dzService.getTopRadios();
 
+        call.enqueue(new Callback<DeezerResponse>() {
+            @Override
+            public void onResponse(Call<DeezerResponse> call, Response<DeezerResponse> response) {
+                if (response.isSuccessful()) {
+                    DeezerResponse deezerResponse = response.body();
+                    if (deezerResponse != null) {
+                        // Hiển thị danh sách Top Radio trong RecyclerView
+                        List<DeezerRadio> topRadios = deezerResponse.getData();
+                        radioAdapter = new RadioAdapter(getContext(), topRadios);
+                        recyclerViewTopRadio.setAdapter(radioAdapter);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeezerResponse> call, Throwable t) {
+                // Xử lý khi gọi API thất bại
+            }
+        });
+    }
 
     // ============================== TOP GENRES RADIO =================================
     private void fetchTopRadioGenres() {
