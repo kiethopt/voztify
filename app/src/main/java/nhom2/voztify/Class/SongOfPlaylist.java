@@ -1,22 +1,14 @@
 package nhom2.voztify.Class;
 
 public class SongOfPlaylist {
-    String id;
     String title;
     String artist;
+    String img;
 
-    public SongOfPlaylist(String id, String title, String artist) {
-        this.id = id;
+    public SongOfPlaylist(String title, String artist, String img) {
         this.title = title;
         this.artist = artist;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.img = img;
     }
 
     public String getTitle() {
@@ -33,6 +25,14 @@ public class SongOfPlaylist {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public SongOfPlaylist(){

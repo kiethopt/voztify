@@ -51,6 +51,8 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SearchTrackAdapter trackAdapter;
     private DZService dzService;
+    private List<Track> songDetailList; // Assuming this is your list of tracks in recycler_view_song_detail
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,8 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             @Override
             public void onTrackClick(Track track) {
                 addTrackToFirebasePlaylist(getActualPlaylistId(), track);
+                addTrackToRecyclerView(track);
+
             }
         });
         // Set up the TextWatcher for real-time search
@@ -104,6 +108,10 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             }
         });
     }
+
+    private void addTrackToRecyclerView(Track track) {
+    }
+
     private String getActualPlaylistId() {
         // Implement your logic to retrieve the actual playlistId
         // For example, you might receive it through an intent
@@ -123,8 +131,13 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             String trackId = playlistRef.push().getKey();
 
 
+            Map<String, Object> trackData = new HashMap<>();
+            trackData.put("title", track.getTitle());
+            trackData.put("artist", track.getArtist().getName());
+            trackData.put("md5_image", track.getMd5_image());
+
             // Save track information to the playlist
-            playlistRef.child(trackId).setValue(track);
+            playlistRef.child(trackId).setValue(trackData);
         }
     }
 

@@ -56,7 +56,16 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         this.tracks.addAll(newTracks);
         notifyDataSetChanged();
     }
-
+    public void updatePlaylist(List<Track> newTracks) {
+        this.tracks = newTracks;
+        notifyDataSetChanged();
+    }
+    public void addTrack(Track track) {
+        // Add the track to your list
+        tracks.add(track);
+        // Notify the adapter about the data change
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

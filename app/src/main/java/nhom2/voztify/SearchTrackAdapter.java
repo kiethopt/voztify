@@ -30,6 +30,10 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
         this.context = context;
         this.tracks = tracks;
     }
+    public void addTrack(Track track) {
+        tracks.add(track);
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override

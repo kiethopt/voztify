@@ -258,6 +258,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
+
                 String updatedPlaylistName = data.getStringExtra("updatedPlaylistName");
 
                 // Update your UI or perform any additional logic with the updated information
@@ -266,4 +267,5 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             }
         }
     }
+
 }
