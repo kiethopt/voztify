@@ -1,5 +1,5 @@
     package nhom2.voztify;
-    
+
     import android.content.Intent;
     import android.media.MediaPlayer;
     import android.net.Uri;
@@ -11,7 +11,7 @@
     import android.widget.SeekBar;
     import android.widget.TextView;
     import android.widget.Toast;
-    
+
     import androidx.appcompat.app.AppCompatActivity;
 
     import com.google.firebase.auth.FirebaseAuth;
@@ -19,10 +19,10 @@
     import com.google.firebase.database.DatabaseReference;
     import com.google.firebase.database.FirebaseDatabase;
     import com.google.firebase.database.ServerValue;
-    import com.google.firebase.firestore.FirebaseFirestore;
     import com.squareup.picasso.Picasso;
-    
+
     import java.util.List;
+    import java.util.Random;
 
     import nhom2.voztify.Class.History;
     import nhom2.voztify.Class.Track;
@@ -37,6 +37,10 @@
         private ImageView imgViewSong;
         private TextView songTitleTextView, songArtistTextView, startTime, endTime;
         private SeekBar seekBar;
+        private ImageButton repeatButton, shuffleButton;
+
+        private boolean isRepeat = false;
+        private boolean isShuffle = false;
         private String currentTrackTitle; // Added variable to keep track of the current track title
         // For Realtime Database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -92,6 +96,18 @@
                     }
                 });
                 mediaPlayer.prepareAsync();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        playPauseButton.setImageResource(R.drawable.ic_play);
+                        if (isRepeat) {
+                            mediaPlayer.seekTo(0);
+                            mediaPlayer.start();
+                        } else {
+                            loadNextTrack();
+                        }
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,6 +124,11 @@
             previousButton = findViewById(R.id.previousButton);
             nextButton = findViewById(R.id.nextButton);
             songArtistTextView = findViewById(R.id.songArtistTextView);
+            repeatButton = findViewById(R.id.repeatButton);
+            shuffleButton = findViewById(R.id.shuffleButton);
+
+            repeatButton.setImageResource(isRepeat ? R.drawable.repeat_on : R.drawable.repeat_off);
+            shuffleButton.setImageResource(isShuffle ? R.drawable.shuffle_on : R.drawable.shuffle_off);
         }
     
         public void addEvents() {
@@ -155,6 +176,20 @@
                     loadNextTrack();
                 }
             });
+
+            repeatButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toggleRepeat();
+                }
+            });
+
+            shuffleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toggleShuffle();
+                }
+            });
         }
     
     
@@ -198,21 +233,34 @@
                 }
             }
 
-            if (currentIndex > 0) {
-                Track previousTrack = trackList.get(currentIndex - 1);
-                currentTrackTitle = previousTrack.getTitle();
-                startNewTrack(previousTrack);
-                updateHistory(previousTrack,userId); // Update history for the previous track
-            } else {
-                Track lastTrack = trackList.get(trackList.size() - 1);
-                currentTrackTitle = lastTrack.getTitle();
-                startNewTrack(lastTrack);
-                updateHistory(lastTrack,userId); // Update history for the last track
+            if (isShuffle) {
+                if (currentIndex >= 0) {
+                    int randomIndex = new Random().nextInt(trackList.size());
+                    while (randomIndex == currentIndex) {
+                        randomIndex = new Random().nextInt(trackList.size());
+                    }
+                    Track randomTrack = trackList.get(randomIndex);
+                    currentTrackTitle = randomTrack.getTitle();
+                    startNewTrack(randomTrack);
+                    updateHistory(randomTrack, userId);
+                }
+            }else{
+                if (currentIndex > 0) {
+                    Track previousTrack = trackList.get(currentIndex - 1);
+                    currentTrackTitle = previousTrack.getTitle();
+                    startNewTrack(previousTrack);
+                    updateHistory(previousTrack,userId);
+                } else {
+                    Track lastTrack = trackList.get(trackList.size() - 1);
+                    currentTrackTitle = lastTrack.getTitle();
+                    startNewTrack(lastTrack);
+                    updateHistory(lastTrack,userId);
+                }
             }
         }
 
         private void loadNextTrack() {
-            int currentIndex = -1;
+            int currentIndex = 1;
 
             for (int i = 0; i < trackList.size(); i++) {
                 if (trackList.get(i).getTitle().equalsIgnoreCase(currentTrackTitle)) {
@@ -221,23 +269,34 @@
                 }
             }
 
-            if (currentIndex >= 0 && currentIndex < trackList.size() - 1) {
-                Track nextTrack = trackList.get(currentIndex + 1);
-                currentTrackTitle = nextTrack.getTitle();
-                startNewTrack(nextTrack);
-                updateHistory(nextTrack,userId); // Update history for the next track
-            } else if (currentIndex == trackList.size() - 1) {
-                Track firstTrack = trackList.get(0);
-                currentTrackTitle = firstTrack.getTitle();
-                startNewTrack(firstTrack);
-                updateHistory(firstTrack,userId); // Update history for the first track
+            if (isShuffle) {
+                if (currentIndex >= 0) {
+                    int randomIndex = new Random().nextInt(trackList.size());
+                    while (randomIndex == currentIndex) {
+                        randomIndex = new Random().nextInt(trackList.size());
+                    }
+                    Track randomTrack = trackList.get(randomIndex);
+                    currentTrackTitle = randomTrack.getTitle();
+                    startNewTrack(randomTrack);
+                    updateHistory(randomTrack, userId);
+                }
             } else {
-                Toast.makeText(getApplicationContext(), "Invalid track index", Toast.LENGTH_SHORT).show();
+                if (currentIndex >= 0 && currentIndex < trackList.size() - 1) {
+                    Track nextTrack = trackList.get(currentIndex + 1);
+                    currentTrackTitle = nextTrack.getTitle();
+                    startNewTrack(nextTrack);
+                    updateHistory(nextTrack,userId); // Update history for the next track
+                } else if (currentIndex == trackList.size() - 1) {
+                    Track firstTrack = trackList.get(0);
+                    currentTrackTitle = firstTrack.getTitle();
+                    startNewTrack(firstTrack);
+                    updateHistory(firstTrack,userId); // Update history for the first track
+                } else {
+                    Toast.makeText(getApplicationContext(), "Invalid track index", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
-
-    
         private void startNewTrack(Track newTrack) {
             if (mediaPlayer != null) {
                 if (mediaPlayer.isPlaying()) {
@@ -259,6 +318,20 @@
                         handler.post(UpdateSongTime);
                     }
                 });
+
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        playPauseButton.setImageResource(R.drawable.ic_play);
+                        if (isRepeat) {
+                            mediaPlayer.seekTo(0);
+                            mediaPlayer.start();
+                        } else {
+                            loadNextTrack();
+                        }
+                    }
+                });
+
                 mediaPlayer.prepareAsync();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -291,6 +364,31 @@
             // Save the History object to Firebase
             databaseReference.child(userId).child("user_history").child(historyIde).setValue(history);
         }
+
+        private void toggleRepeat() {
+            isRepeat = !isRepeat;
+            repeatButton.setImageResource(isRepeat ? R.drawable.repeat_on : R.drawable.repeat_off);
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    if (isRepeat) {
+                        mediaPlayer.seekTo(0);
+                        mediaPlayer.start();
+                    } else {
+                        // Handle next track or stop playback
+                    }
+                }
+            });
+        }
+
+        private void toggleShuffle() {
+            isShuffle = !isShuffle;
+            shuffleButton.setImageResource(isShuffle ? R.drawable.shuffle_on : R.drawable.shuffle_off);
+
+            currentTrackTitle = track.getTitle();
+        }
+
         @Override
         protected void onDestroy() {
             super.onDestroy();
