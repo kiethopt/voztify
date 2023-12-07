@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +38,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -49,6 +51,7 @@ import nhom2.voztify.Api.DeezerService;
 import nhom2.voztify.Api.SpotifyApi;
 import nhom2.voztify.Class.Artist;
 import nhom2.voztify.Class.History;
+import nhom2.voztify.Class.Track;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,7 +63,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerViewTopRadio;
     private RadioAdapter radioAdapter;
-    private RecyclerView recyclerViewTopArtist;
+    private RecyclerView recyclerViewTopArtist, recyclerViewTopTracks;
     private ArtistAdapter artistAdapter;
     private List<Artist> artistList;
     private List<TopRadioGenre> topRadioGenresData;
@@ -72,12 +75,18 @@ public class HomeFragment extends Fragment {
     private ImageView editProfileImageView, profilePhoto;
     private String userName;
     private TextView bioTextView;
+    private RecyclerView recyclerView;
+    private TrackAdapter trackAdapter;
+    private TracksAdapter tracksAdapter;
+    private List<Track> trackList;
+    private Context context;
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     String userId = currentUser.getUid();
     // Thêm tên của SharedPreferences
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final int EDIT_PROFILE_REQUEST_CODE = 1;
     private static final int REQUEST_CODE_PERMISSION = 123;
+    private static final int REQUEST_CODE_PLAY_MUSIC = 1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -95,7 +104,11 @@ public class HomeFragment extends Fragment {
         profilePhoto = view.findViewById(R.id.profilePhoto);
         recyclerViewTopArtist =view.findViewById(R.id.recyclerViewTopArtist);
         recyclerViewTopRadio = view.findViewById(R.id.recyclerViewTopRadio);
+        recyclerViewTopTracks = view.findViewById(R.id.recyclerViewTopTracks);
+        context = getContext();
 
+        LinearLayoutManager layoutManagerTracks = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewTopTracks.setLayoutManager(layoutManagerTracks);
 
         LinearLayoutManager layoutManagerRadio = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewTopRadio.setLayoutManager(layoutManagerRadio);
@@ -123,6 +136,7 @@ public class HomeFragment extends Fragment {
         loadTopRadio();
         fetchArtists();
         fetchTopRadioGenres();
+        fetchTracks();
 
 
         // Xóa dữ liệu cũ từ SharedPreferences
@@ -259,6 +273,61 @@ public class HomeFragment extends Fragment {
         return sharedPreferences.getString("profileImageUri_" + userId, null);
     }
 
+    // ==============Top Track =================
+    private void fetchTracks() {
+        DZService service = DeezerService.getService();
+        Call<JsonObject> call = service.getTopTracks(); // Assume JsonObject as the response type
+
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject jsonResponse = response.body();
+
+                    if (jsonResponse.has("tracks")) {
+                        JsonObject tracksObject = jsonResponse.getAsJsonObject("tracks");
+
+                        TrackResponse trackData = new Gson().fromJson(tracksObject, TrackResponse.class);
+                        trackList = trackData.getTracks();
+                        updateTrackListView(trackList);
+
+                        recyclerViewTopTracks.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                    } else {
+                        Log.e("TrackFragment", "Response does not contain 'tracks' field");
+                    }
+                } else {
+                    try {
+                        Log.e("TrackFragment", "Error fetching tracks: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                Log.e("TrackFragment", "Error fetching tracks: " + t.getMessage());
+            }
+        });
+    }
+
+
+
+    private void updateTrackListView(List<Track> tracks) {
+        tracksAdapter = new TracksAdapter(context, tracks, new TracksAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Track track = tracks.get(position);
+
+                Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
+                intent.putExtra("Track", track);
+                intent.putExtra("TracksList", (Serializable) trackList);
+                startActivityForResult(intent, REQUEST_CODE_PLAY_MUSIC);
+            }
+        });
+
+        recyclerViewTopTracks.setAdapter(tracksAdapter);
+    }
     //===================top radio================
     private void loadTopRadio() {
         DZService dzService = DeezerService.getService();
