@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.text.InputFilter;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -30,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,6 +92,13 @@ public class EditProfileActivity extends AppCompatActivity {
         // Ràng buộc độ dài cho edtSDT (tối đa 12 kí tự)
         phoneNumEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
 
+        birthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
 
         // Initialize the adapter
         adapter = ArrayAdapter.createFromResource(this, R.array.gender_array, android.R.layout.simple_spinner_item);
@@ -119,7 +130,23 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+    private void showDatePickerDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(EditProfileActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
+                        birthEditText.setText(selectedDate);
+                    }
+                }, year, month, day);
+
+        datePickerDialog.show();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,6 +216,27 @@ public class EditProfileActivity extends AppCompatActivity {
         String phoneNum = phoneNumEditText.getText().toString();
         String birth = birthEditText.getText().toString();
         String gender = genderSpinner.getSelectedItem().toString();
+
+        // Validate the age
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Calendar birthCalendar = Calendar.getInstance();
+            birthCalendar.setTime(sdf.parse(birth));
+
+            Calendar tenYearsAgo = Calendar.getInstance();
+            tenYearsAgo.add(Calendar.YEAR, -10);
+
+            if (birthCalendar.after(tenYearsAgo)) {
+                Toast.makeText(EditProfileActivity.this, "You must be at least 10 years old.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(EditProfileActivity.this, "Invalid date format.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
