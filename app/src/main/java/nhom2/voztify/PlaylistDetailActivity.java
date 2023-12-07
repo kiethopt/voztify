@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -180,49 +181,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             }
         }
     }
-
-//    private void deletePlaylistFromFirebase(String playlistId) {
-//        DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance().getReference("users")
-//                .child(currentUser.getUid()).child("playlists");
-//
-//        // Kiểm tra xem playlistId có tồn tại không trước khi xóa
-//        userPlaylistRef.child(playlistId).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    // Nút con tồn tại, tiến hành xóa
-//                    userPlaylistRef.child(playlistId).removeValue()
-//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                @Override
-//                                public void onSuccess(Void aVoid) {
-//                                    // Xóa thành công
-//                                    Intent resultIntent = new Intent();
-//                                    resultIntent.putExtra("deletedPlaylistId", playlistId);
-//                                    setResult(Activity.RESULT_OK, resultIntent);
-//                                    finish();
-//                                }
-//                            })
-//                            .addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    // Xóa thất bại, xử lý theo ý của bạn
-//                                    Toast.makeText(PlaylistDetailActivity.this, "Failed to delete playlist: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-//                } else {
-//                    // Nút con không tồn tại, có thể đã bị xóa bởi người dùng khác
-//                    Toast.makeText(PlaylistDetailActivity.this, "Playlist not found", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Xử lý lỗi nếu có
-//                Toast.makeText(PlaylistDetailActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
+    //
     private void deletePlaylistFromFirebase(String playlistId) {
         DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance().getReference("users")
                 .child(currentUser.getUid()).child("playlists");
@@ -247,4 +206,17 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String updatedPlaylistName = data.getStringExtra("updatedPlaylistName");
+
+                // Update your UI or perform any additional logic with the updated information
+                // For example, you can update the playlist name TextView
+                tvPlaylistDetailName.setText(updatedPlaylistName);
+            }
+        }
+    }
 }
