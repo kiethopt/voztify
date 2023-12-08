@@ -66,7 +66,6 @@ public class TrackDetailActivity extends AppCompatActivity {
             public void onTrackClick(Track selectedTrack) {
                 Intent intent = new Intent(TrackDetailActivity.this, PlayMusicActivity.class);
                 intent.putExtra("Track", selectedTrack);
-                intent.putExtra("TracksList", selectedTrack);
                 startActivity(intent);
             }
         });

@@ -21,6 +21,7 @@
     import com.google.firebase.database.ServerValue;
     import com.squareup.picasso.Picasso;
 
+    import java.util.ArrayList;
     import java.util.List;
     import java.util.Random;
 
@@ -59,9 +60,22 @@
 
             //Set Data
             handler = new Handler();
-    
+
             track = (Track) getIntent().getSerializableExtra("Track");
             trackList = (List<Track>) getIntent().getSerializableExtra("TracksList");
+
+            // Check if trackList is null
+            if (trackList == null) {
+                // Initialize trackList and add the track
+                trackList = new ArrayList<>();
+                trackList.add(track);
+            } else {
+                // Ensure track is not null before adding
+                if (track != null) {
+                    trackList.add(track);
+                }
+            }
+
             currentTrackTitle = track.getTitle();
             // Update history for the current track
             updateHistory(track, userId);
