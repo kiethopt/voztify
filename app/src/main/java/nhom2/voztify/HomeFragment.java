@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -51,8 +53,6 @@ import nhom2.voztify.Class.Track;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import android.Manifest;
 
 
 public class HomeFragment extends Fragment {
@@ -148,6 +148,13 @@ public class HomeFragment extends Fragment {
                 Log.d("HomeFragment", "Saved Image URI: " + savedImageUri);
         }
         editProfileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditProfileActivity();
+            }
+        });
+
+        profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openEditProfileActivity();
