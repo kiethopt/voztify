@@ -2,22 +2,19 @@ package nhom2.voztify.Api;
 
 import com.google.gson.JsonObject;
 
-import java.util.List;
-
-import nhom2.voztify.AlbumSearchResponse;
-import nhom2.voztify.ArtistAlbumsResponse;
-import nhom2.voztify.ArtistSearchResponse;
-import nhom2.voztify.ArtistTracksResponse;
-import nhom2.voztify.Class.Track;
-import nhom2.voztify.DeezerResponse;
-import nhom2.voztify.RelatedArtistsResponse;
-import nhom2.voztify.TrackResponse;
-import nhom2.voztify.TrendingAlbumResponse;
+import nhom2.voztify.Controller.AlbumSearchResponse;
+import nhom2.voztify.Controller.ArtistAlbumsResponse;
+import nhom2.voztify.Controller.ArtistSearchResponse;
+import nhom2.voztify.Controller.ArtistTracksResponse;
+import nhom2.voztify.Model.Track;
+import nhom2.voztify.Controller.DeezerResponse;
+import nhom2.voztify.Controller.RelatedArtistsResponse;
+import nhom2.voztify.Controller.TrackResponse;
+import nhom2.voztify.Controller.TrendingAlbumResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 public interface DZService {
     @GET("/editorial/0/charts")

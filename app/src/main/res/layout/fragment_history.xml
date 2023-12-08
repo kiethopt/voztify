@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#040D12"
     android:orientation="vertical"
-    tools:context=".HistoryFragment">
+    tools:context=".View.HistoryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar4"

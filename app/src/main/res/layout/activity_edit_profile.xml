@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#040D12"
     android:padding="16dp"
-    tools:context=".EditProfileActivity">
+    tools:context=".View.EditProfileActivity">
 
     <ImageView
         android:id="@+id/closeIcon"

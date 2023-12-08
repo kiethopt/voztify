@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/black"
-    tools:context=".Register">
+    tools:context=".View.Register">
 
     <ImageView
         android:id="@+id/imageView"

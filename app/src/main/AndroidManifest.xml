@@ -23,61 +23,61 @@
         android:theme="@style/Theme.Voztify"
         tools:targetApi="31">
         <activity
-            android:name=".TrackDetailActivity"
+            android:name=".View.TrackDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ActivityUpdatePlaylist"
+            android:name=".View.ActivityUpdatePlaylist"
             android:exported="false" />
         <activity
-            android:name=".ActivityInsertSongPlaylist"
+            android:name=".View.ActivityInsertSongPlaylist"
             android:exported="false" />
         <activity
-            android:name=".LoginWithoutPassWordActivity"
+            android:name=".View.LoginWithoutPassWordActivity"
             android:exported="false" />
         <activity
-            android:name=".ArtistDetailActivity"
+            android:name=".View.ArtistDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".CreatePlaylistActivity"
+            android:name=".View.CreatePlaylistActivity"
             android:exported="false" />
         <activity
-            android:name=".PlaylistDetailActivity"
+            android:name=".View.PlaylistDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".AlbumDetailActivity"
+            android:name=".View.AlbumDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".PlayMusicActivity"
+            android:name=".View.PlayMusicActivity"
             android:exported="false" />
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".View.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".View.SettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ExploreFragment"
+            android:name=".View.ExploreFragment"
             android:exported="false" />
         <activity
-            android:name=".HomeFragment"
+            android:name=".View.HomeFragment"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".View.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".SignUp"
+            android:name=".View.SignUp"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".View.Login"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name=".View.Register"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".View.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".View.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

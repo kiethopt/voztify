@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#3A3A3A"
-    tools:context=".CreatePlaylistActivity">
+    tools:context=".View.CreatePlaylistActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
