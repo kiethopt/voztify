@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import nhom2.voztify.Api.DeezerService;
 import nhom2.voztify.Class.Album;
 import nhom2.voztify.Class.Artist;
 import nhom2.voztify.ArtistSearchResponse;
+import nhom2.voztify.Class.Track;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -119,6 +121,26 @@ public class SearchFragment extends Fragment {
             public void onFailure(Call<AlbumSearchResponse> call, Throwable t) {
             }
         });
+
+        // Fetch tracks
+        Call<TrackResponse> trackCall = service.searchTrack(query);
+        trackCall.enqueue(new Callback<TrackResponse>() {
+            @Override
+            public void onResponse(Call<TrackResponse> call, Response<TrackResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Track> tracks = response.body().getTracks();
+                    for (Track track : tracks) {
+                        combinedResults.add(new SearchResult(track));
+                    }
+                    updateResultsGrid(combinedResults);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TrackResponse> call, Throwable t) {
+                // Handle failure
+            }
+        });
     }
 
     private void updateResultsGrid(List<SearchResult> combinedResults) {
@@ -128,7 +150,6 @@ public class SearchFragment extends Fragment {
 
     private void loadTrendingAlbums() {
         Call<TrendingAlbumResponse> call = service.getTrendingAlbums();
-
         call.enqueue(new Callback<TrendingAlbumResponse>() {
             @Override
             public void onResponse(Call<TrendingAlbumResponse> call, Response<TrendingAlbumResponse> response) {
@@ -136,6 +157,16 @@ public class SearchFragment extends Fragment {
                     List<Album> albums = response.body().getData();
                     albumAdapter.updateData(albums);
                     searchResultsGrid.setAdapter(albumAdapter);
+
+                    // Thiết lập sự kiện click cho mỗi album
+                    albumAdapter.setOnItemClickListener(new AlbumGridViewAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Album album) {
+                            Intent intent = new Intent(getContext(), AlbumDetailActivity.class);
+                            intent.putExtra("album", album);
+                            startActivity(intent);
+                        }
+                    });
                 } else {
                     Toast.makeText(getContext(), "Error loading trending albums", Toast.LENGTH_SHORT).show();
                 }
@@ -147,6 +178,4 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-
-
 }

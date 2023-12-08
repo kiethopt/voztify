@@ -15,13 +15,21 @@ import java.util.List;
 import nhom2.voztify.Class.Album;
 
 public class AlbumGridViewAdapter extends BaseAdapter {
-
     private Context context;
     private List<Album> albums;
+    private OnItemClickListener onItemClickListener;
 
     public AlbumGridViewAdapter(Context context, List<Album> albums) {
         this.context = context;
         this.albums = albums;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Album album);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     @Override
@@ -42,7 +50,6 @@ public class AlbumGridViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.album_grid_item, parent, false);
             holder = new ViewHolder();
@@ -54,11 +61,14 @@ public class AlbumGridViewAdapter extends BaseAdapter {
         }
 
         Album album = albums.get(position);
-        Picasso.get()
-                .load(album.getCover())
-                .placeholder(R.drawable.placeholder_img)
-                .into(holder.albumCover);
+        Picasso.get().load(album.getCover()).placeholder(R.drawable.placeholder_img).into(holder.albumCover);
         holder.albumTitle.setText(album.getTitle());
+
+        convertView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(album);
+            }
+        });
 
         return convertView;
     }

@@ -113,7 +113,6 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
                     }
                 }
             });
-
         }
     }
 
