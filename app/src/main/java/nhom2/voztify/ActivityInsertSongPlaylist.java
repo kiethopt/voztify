@@ -66,6 +66,7 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         trackAdapter = new SearchTrackAdapter(this, new ArrayList<>());
+        songDetailList = new ArrayList<>();
         recyclerView.setAdapter(trackAdapter);
 
         trackAdapter.setTrackClickListener(new SearchTrackAdapter.OnTrackClickListener() {
@@ -110,6 +111,9 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
     }
 
     private void addTrackToRecyclerView(Track track) {
+        songDetailList.add(track);
+        trackAdapter.notifyDataSetChanged();
+
     }
 
     private String getActualPlaylistId() {

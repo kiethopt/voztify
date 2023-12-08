@@ -1,12 +1,14 @@
 package nhom2.voztify;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,6 +34,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import nhom2.voztify.Class.Track;
+
 public class PlaylistDetailActivity extends AppCompatActivity {
     ImageView imgPlaylistDetail;
     TextView tvPlaylistDetailName;
@@ -43,6 +50,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
     private PlaylistAdapter playlistAdapter;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
+    List<Track> songDetailList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +64,9 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
         tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
         imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
-        
+        songDetailList = new ArrayList<>();
+
+
 
         setSupportActionBar(toolbar);
         // Tắt tiêu đề mặc định của ActionBar
@@ -178,16 +188,17 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get the playlist ID from the intent
-                playlistId = getIntent().getStringExtra("playlistId");
-
-                if (playlistId != null && !playlistId.isEmpty()) {
-                    // Pass the playlist ID to the delete function
-                    deletePlaylistFromFirebase(playlistId);
-                } else {
-                    // Handle the case when the playlist ID is null or empty
-                    Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist ID", Toast.LENGTH_SHORT).show();
-                }
+//                // Get the playlist ID from the intent
+//                playlistId = getIntent().getStringExtra("playlistId");
+//
+//                if (playlistId != null && !playlistId.isEmpty()) {
+//                    // Pass the playlist ID to the delete function
+//                    deletePlaylistFromFirebase(playlistId);
+//                } else {
+//                    // Handle the case when the playlist ID is null or empty
+//                    Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist ID", Toast.LENGTH_SHORT).show();
+//                }
+                showDeleteConfirmationDialog();
                 dialog.dismiss();
             }
         });
@@ -198,6 +209,27 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Deletion");
+        builder.setMessage("Are you sure you want to delete this playlist?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // User clicked Yes, proceed with deletion
+                deletePlaylistFromFirebase(playlistId);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
+
     //
     private void getPlaylistIdAndDelete() {
         if (currentUser != null) {

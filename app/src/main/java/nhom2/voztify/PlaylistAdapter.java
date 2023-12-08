@@ -26,7 +26,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
     ImageButton playlistImageButton;
     TextView playlistNameTextView;
     TextView yourNameTextView;
-    ImageButton deleteButton;
 
     int imageResourceId;
     private List<Playlist> playlists;
@@ -84,7 +83,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
             playlistImageButton = itemView.findViewById(R.id.imageButton_playlist);
             playlistNameTextView = itemView.findViewById(R.id.tv_playlist_name);
             yourNameTextView = itemView.findViewById(R.id.tv_your_name);
-            deleteButton = itemView.findViewById(R.id.img_btn_delete_playlist);
 
             playlistImageButton.setOnClickListener(v -> {
                 // Get the clicked playlist
@@ -98,29 +96,29 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHo
                 intent.putExtra("imageResourceId", clickedPlaylist.getImageResource());
                 context.startActivity(intent);
             });
-            deleteButton.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    String playlistId = playlists.get(position).getId();
-                    // Hiển thị dialog xác nhận xóa
-                    showDeleteDialog(playlistId);
-                }
-            });
+//            deleteButton.setOnClickListener(v -> {
+//                int position = getAdapterPosition();
+//                if (position != RecyclerView.NO_POSITION) {
+//                    String playlistId = playlists.get(position).getId();
+//                    // Hiển thị dialog xác nhận xóa
+//                    showDeleteDialog(playlistId);
+//                }
+//            });
 
         }
-        public void removePlaylist(int position) {
-            Playlist removedPlaylist = playlists.remove(position);
-            notifyItemRemoved(position);
-            if (removedPlaylist != null && removedPlaylist.getId() != null && !removedPlaylist.getId().isEmpty()) {
-                removeFromFirebase(removedPlaylist.getId());
-            } else {
-                // Handle the case where the playlistId is null or empty
-                // You can log an error, show a message, or take appropriate action
-            }
-
-            // Remove the playlist from Firebase
-            removeFromFirebase(removedPlaylist.getId());
-        }
+//        public void removePlaylist(int position) {
+//            Playlist removedPlaylist = playlists.remove(position);
+//            notifyItemRemoved(position);
+//            if (removedPlaylist != null && removedPlaylist.getId() != null && !removedPlaylist.getId().isEmpty()) {
+//                removeFromFirebase(removedPlaylist.getId());
+//            } else {
+//                // Handle the case where the playlistId is null or empty
+//                // You can log an error, show a message, or take appropriate action
+//            }
+//
+//            // Remove the playlist from Firebase
+//            removeFromFirebase(removedPlaylist.getId());
+//        }
 
         @Override
         public void onClick(View v) {
