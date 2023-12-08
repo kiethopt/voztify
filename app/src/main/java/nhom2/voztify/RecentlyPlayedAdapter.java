@@ -80,7 +80,9 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
             artistTextView = itemView.findViewById(R.id.artistTextView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
             imageView = itemView.findViewById(R.id.img_recentlyPlayed);
+
         }
+
     }
 
     private String formatTimestamp(Object timestamp) {

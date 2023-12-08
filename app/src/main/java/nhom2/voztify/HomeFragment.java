@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
 
 
         // Xóa dữ liệu cũ từ SharedPreferences
-       // clearSharedPreferences();
+        //clearSharedPreferences();
 
         // Hiển thị thông tin người dùng mới
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -181,12 +181,12 @@ public class HomeFragment extends Fragment {
     //---------------------------------------------------
 
     // Thêm phương thức để xóa dữ liệu từ SharedPreferences
-    private void clearSharedPreferences() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-    }
+//    private void clearSharedPreferences() {
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.clear();
+//        editor.apply();
+//    }
 
     private void openEditProfileActivity() {
         startActivityForResult(new Intent(getActivity(), EditProfileActivity.class), EDIT_PROFILE_REQUEST_CODE);

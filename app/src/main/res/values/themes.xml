@@ -17,4 +17,13 @@
         <item name="android:textColorHint">#ffffff</item>
         <!-- Các thuộc tính khác nếu cần -->
     </style>
+    <style name="CustomChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">#FFFFFF</item> <!-- Text color -->
+        <item name="android:backgroundTint">@color/colorInactive</item> <!-- Background color -->
+        <item name="android:textAppearance">@style/CustomChipTextAppearance</item> <!-- Text appearance -->
+    </style>
+
+    <style name="CustomChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">14sp</item> <!-- Text size -->
+    </style>
 </resources>

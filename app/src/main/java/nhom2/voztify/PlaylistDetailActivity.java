@@ -322,10 +322,12 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             if (data != null) {
 
                 String updatedPlaylistName = data.getStringExtra("updatedPlaylistName");
+                String yourName = data.getStringExtra("yourName");
+
 
                 // Update your UI or perform any additional logic with the updated information
                 // For example, you can update the playlist name TextView
-                tvPlaylistDetailName.setText(updatedPlaylistName);
+                tvPlaylistDetailName.setText(updatedPlaylistName, TextView.BufferType.valueOf(yourName));
             }
         }
     }
