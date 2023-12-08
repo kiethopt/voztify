@@ -9,14 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,9 +46,7 @@ import java.util.List;
 
 import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
-import nhom2.voztify.Api.SpotifyApi;
 import nhom2.voztify.Class.Artist;
-import nhom2.voztify.Class.History;
 import nhom2.voztify.Class.Track;
 import retrofit2.Call;
 import retrofit2.Callback;

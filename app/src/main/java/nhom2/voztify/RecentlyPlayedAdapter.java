@@ -16,20 +16,25 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import nhom2.voztify.Class.History;
+import nhom2.voztify.Class.SongForU;
 
 public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAdapter.ViewHolder> {
 
     private Context context;
-    private List<History> historyList;
+    private List<SongForU> songForUList;
     private OnItemClickListener onItemClickListener;
 
-    public RecentlyPlayedAdapter(Context context, List<History> historyList, OnItemClickListener onItemClickListener) {
+    public RecentlyPlayedAdapter(Context context, List<SongForU> songForUList, OnItemClickListener onItemClickListener) {
         this.context = context;
-        this.historyList = historyList;
+        this.songForUList = songForUList;
         this.onItemClickListener = onItemClickListener;
     }
-
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,24 +42,17 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         return new ViewHolder(itemView);
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
-    }
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        History history = historyList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder,@SuppressLint("RecyclerView") int position) {
+        SongForU songForU = songForUList.get(position);
 
-        holder.titleTextView.setText(history.getTitle());
-        holder.artistTextView.setText(history.getArtist());
-        holder.timestampTextView.setText(formatTimestamp(history.getTimestamp()));
+        holder.titleTextView.setText(songForU.getTitle());
+        holder.artistTextView.setText(songForU.getArtist());
+        holder.timestampTextView.setText(formatTimestamp(songForU.getTimestamp()));
         // Load the image into the ImageView using Picasso (you need to add the Picasso library to your dependencies)
 
-        String imgUrl =  "https://e-cdns-images.dzcdn.net/images/cover" + "/" + history.getImageUrl() + "/120x120-000000-80-0-0.jpg";
+        String imgUrl =  "https://e-cdns-images.dzcdn.net/images/cover" + "/" + songForU.getImageUrl() + "/120x120-000000-80-0-0.jpg";
         Picasso.get().load(imgUrl).into(holder.imageView);
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +65,7 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
 
     @Override
     public int getItemCount() {
-        return historyList.size();
+        return songForUList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -103,12 +101,12 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
     }
 
 
-    public void setHistoryList(List<History> historyList) {
-        // Sort the historyList in descending order based on timestamp
-        Collections.sort(historyList, (history1, history2) ->
+    public void setHistoryList(List<SongForU> songForUList) {
+        // Sort the songForUList in descending order based on timestamp
+        Collections.sort(songForUList, (history1, history2) ->
                 Long.compare((Long) history2.getTimestamp(), (Long) history1.getTimestamp()));
 
-        this.historyList = historyList;
+        this.songForUList = songForUList;
         notifyDataSetChanged();
     }
 }

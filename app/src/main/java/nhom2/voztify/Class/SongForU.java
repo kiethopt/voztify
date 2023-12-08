@@ -1,22 +1,22 @@
 package nhom2.voztify.Class;
 
-public class History {
+public class SongForU {
     private String title;
     private String artist;
     private String imageUrl;  // Add this field for the image URL
     private Object timestamp;
 
     // Empty constructor for Firebase
-    public History() {
+    public SongForU() {
     }
 
-    public History(String title, String artist, String imageUrl, Object timestamp) {
+    public SongForU(String title, String artist, String imageUrl, Object timestamp) {
         this.title = title;
         this.artist = artist;
         this.imageUrl = imageUrl;
         this.timestamp = timestamp;
     }
-    public History(String title, String artist, String imageUrl) {
+    public SongForU(String title, String artist, String imageUrl) {
         this.title = title;
         this.artist = artist;
         this.imageUrl = imageUrl;

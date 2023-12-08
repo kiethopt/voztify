@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import nhom2.voztify.Class.History;
+import nhom2.voztify.Class.SongForU;
 import nhom2.voztify.Class.Track;
 
 public class HistoryFragment extends Fragment {
@@ -32,7 +32,7 @@ public class HistoryFragment extends Fragment {
 
     private RecyclerView rvRecentlyPlayed;
     private RecentlyPlayedAdapter recentlyPlayedAdapter;
-    private List<History> recentlyPlayedList;
+    private List<SongForU> recentlyPlayedList;
 
 
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -80,7 +80,8 @@ public class HistoryFragment extends Fragment {
 
     //Lịch sử nghe nhạc
     private void fetchRecentlyPlayedTracks() {
-        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("user_history");
+        DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId)
+                .child("user_history");
 
         // Listen for changes in the user's listening history
         historyRef.addValueEventListener(new ValueEventListener() {
@@ -90,9 +91,9 @@ public class HistoryFragment extends Fragment {
 
                 // Iterate through the history items and add them to the list
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    History history = snapshot.getValue(History.class);
-                    recentlyPlayedList.add(history);
-                    // Set the sorted history list to the adapter
+                    SongForU songForU = snapshot.getValue(SongForU.class);
+                    recentlyPlayedList.add(songForU);
+                    // Set the sorted songForU list to the adapter
                     recentlyPlayedAdapter.setHistoryList(recentlyPlayedList);
 
                 }

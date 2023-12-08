@@ -1,8 +1,6 @@
 package nhom2.voztify;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,41 +8,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
-import nhom2.voztify.Class.Artist;
-import nhom2.voztify.Class.History;
-import nhom2.voztify.Class.Song;
+import nhom2.voztify.Class.SongForU;
 import nhom2.voztify.Class.Track;
-import nhom2.voztify.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ActivityInsertSongPlaylist extends AppCompatActivity {
     private EditText searchSongEditText;
@@ -73,6 +56,11 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             @Override
             public void onTrackClick(Track track) {
                 addTrackToFirebasePlaylist(getActualPlaylistId(), track);
+                Toast.makeText(ActivityInsertSongPlaylist.this, "Song added successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ActivityInsertSongPlaylist.this, PlaylistDetailActivity.class);
+                intent.putExtra("playlistId", getActualPlaylistId());
+                startActivity(intent);
+                finish(); // Optional: Close the current activity
                 addTrackToRecyclerView(track);
 
             }
@@ -126,22 +114,26 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
+        String trackId = track.getId();
+        if (currentUser != null && !trackId.isEmpty()) {
             String userId = currentUser.getUid();
 
             DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("users")
                     .child(userId).child("playlists").child(playlistId).child("song of playlist");
 
-            String trackId = playlistRef.push().getKey();
 
 
-            Map<String, Object> trackData = new HashMap<>();
-            trackData.put("title", track.getTitle());
-            trackData.put("artist", track.getArtist().getName());
-            trackData.put("md5_image", track.getMd5_image());
+            SongForU trackData = new SongForU(
+                    track.getTitle(),
+                    track.getArtist().getName(),
+                    track.getMd5_image()
+            );
 
             // Save track information to the playlist
             playlistRef.child(trackId).setValue(trackData);
+        }
+        else {
+            Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
         }
     }
 

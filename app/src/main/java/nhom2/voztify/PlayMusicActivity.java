@@ -24,7 +24,7 @@
     import java.util.List;
     import java.util.Random;
 
-    import nhom2.voztify.Class.History;
+    import nhom2.voztify.Class.SongForU;
     import nhom2.voztify.Class.Track;
     
     
@@ -358,11 +358,11 @@
             String historyId = databaseReference.child("user_history").child(userId).push().getKey();
             String historyIde = track.getId();
 
-            // Create a History object
-            History history = new History(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP);
+            // Create a SongForU object
+            SongForU songForU = new SongForU(track.getTitle(), track.getArtist().getName(),track.getMd5_image(), ServerValue.TIMESTAMP);
 
-            // Save the History object to Firebase
-            databaseReference.child(userId).child("user_history").child(historyIde).setValue(history);
+            // Save the SongForU object to Firebase
+            databaseReference.child(userId).child("user_history").child(historyIde).setValue(songForU);
         }
 
         private void toggleRepeat() {

@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -37,37 +38,42 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import nhom2.voztify.Class.Track;
+import nhom2.voztify.Class.SongForU;
 
 public class PlaylistDetailActivity extends AppCompatActivity {
-    ImageView imgPlaylistDetail;
-    TextView tvPlaylistDetailName;
-    TextView tvYourNameDetail;
-    ImageButton imgButtonShowDialog;
-    Toolbar toolbar;
-    String playlistId;
+    private ImageView imgPlaylistDetail;
+    private TextView tvPlaylistDetailName;
+    private TextView tvYourNameDetail;
+    private ImageButton imgButtonShowDialog;
+    private Toolbar toolbar;
+    private String playlistId;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser = mAuth.getCurrentUser();
+
+
     private RecyclerView recyclerView;
-    private PlaylistAdapter playlistAdapter;
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    FirebaseUser currentUser = mAuth.getCurrentUser();
-    List<Track> songDetailList;
+    private SongOfPlaylistAdapter songOfPlaylistAdapter;
+    private List<SongForU> songForUList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist_detail);
-        LinearLayout addSongLayout = findViewById(R.id.layout_add_song);
-        ImageButton imgBtnAddSong = findViewById(R.id.img_btn_add_song_playlist);
-        toolbar = findViewById(R.id.toolbar4sd);
 
+
+
+        LinearLayout addSongLayout = findViewById(R.id.layout_add_song);
+
+        ImageButton imgBtnAddSong = findViewById(R.id.img_btn_add_song_playlist);
 
         imgPlaylistDetail = findViewById(R.id.img_playlist_detail);
         tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
         tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
         imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
-        songDetailList = new ArrayList<>();
 
 
 
+        toolbar = findViewById(R.id.toolbar4sd);
         setSupportActionBar(toolbar);
         // Tắt tiêu đề mặc định của ActionBar
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -82,7 +88,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
 
 
         imgBtnAddSong.setOnClickListener(new View.OnClickListener() {
@@ -121,31 +126,47 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
 
         }
+
+
+
+        recyclerView = findViewById(R.id.recycler_view_song_detail);
+        LinearLayoutManager layoutManagerRV = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManagerRV);
+
+        songForUList = new ArrayList<>();
+        songOfPlaylistAdapter = new SongOfPlaylistAdapter(getApplicationContext(),songForUList);
+        recyclerView.setAdapter(songOfPlaylistAdapter);
+
+        getSongFromFirebase();
     }
+
+
+
     //
-    private void getPlaylistIdFromFirebase() {
+    private void getSongFromFirebase() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
             String userId = currentUser.getUid();
 
-            DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance()
-                    .getReference("users")
-                    .child(userId)
-                    .child("playlists");
+            DatabaseReference songOfPl = FirebaseDatabase.getInstance()
+                    .getReference("users").child(userId)
+                    .child("playlists").child(playlistId)
+                    .child("song of playlist");
 
-            userPlaylistRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            songOfPl.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    // Iterate through the playlists
-                    for (DataSnapshot playlistSnapshot : dataSnapshot.getChildren()) {
-                        playlistId = playlistSnapshot.getKey();
+                    songForUList.clear();
 
-                        // Now you have the playlistId, you can use it as needed
-                        // For example, you might set it to a member variable for later use
-                        // playlistId = ...
+                    // Iterate through the playlists
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        SongForU songForU = snapshot.getValue(SongForU.class);
+                        songForUList.add(songForU);
+
                     }
+
                 }
 
                 @Override
@@ -155,7 +176,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             });
         }
     }
-
     //
     private void showDialog() {
         final Dialog dialog = new Dialog(this);
@@ -209,7 +229,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
-
+    //
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Deletion");
@@ -229,7 +249,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         });
         builder.show();
     }
-
     //
     private void getPlaylistIdAndDelete() {
         if (currentUser != null) {
@@ -298,6 +317,15 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                 tvPlaylistDetailName.setText(updatedPlaylistName);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Fetch and display the user's recently played tracks
+        getSongFromFirebase();
+
     }
 
 }
