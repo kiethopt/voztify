@@ -57,11 +57,7 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             public void onTrackClick(Track track) {
                 addTrackToFirebasePlaylist(getActualPlaylistId(), track);
                 Toast.makeText(ActivityInsertSongPlaylist.this, "Song added successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ActivityInsertSongPlaylist.this, PlaylistDetailActivity.class);
-                intent.putExtra("playlistId", getActualPlaylistId());
-                startActivity(intent);
-                finish(); // Optional: Close the current activity
-                addTrackToRecyclerView(track);
+                finish();
 
             }
         });

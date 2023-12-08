@@ -45,6 +45,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
     private TextView tvPlaylistDetailName;
     private TextView tvYourNameDetail;
     private ImageButton imgButtonShowDialog;
+    LinearLayout layoutAddSong;
     private Toolbar toolbar;
     private String playlistId;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -70,6 +71,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
         tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
         imgButtonShowDialog = findViewById(R.id.image_btn_show_dialog);
+        layoutAddSong = findViewById(R.id.layout_add_song);
 
 
 
@@ -98,7 +100,14 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        layoutAddSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PlaylistDetailActivity.this, ActivityInsertSongPlaylist.class);
+                intent.putExtra("playlistId", playlistId);  // Pass the playlistId to the new activity
+                startActivity(intent);
+            }
+        });
 
         imgButtonShowDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +175,8 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                         songForUList.add(songForU);
 
                     }
+                    songOfPlaylistAdapter.notifyDataSetChanged();
+
 
                 }
 

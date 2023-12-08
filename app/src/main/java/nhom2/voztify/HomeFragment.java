@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
 
 
         // Xóa dữ liệu cũ từ SharedPreferences
-        clearSharedPreferences();
+       // clearSharedPreferences();
 
         // Hiển thị thông tin người dùng mới
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

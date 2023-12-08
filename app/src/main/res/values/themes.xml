@@ -12,4 +12,9 @@
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
 
     </style>
+
+    <style name="EditTextWhiteHint" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorHint">#ffffff</item>
+        <!-- Các thuộc tính khác nếu cần -->
+    </style>
 </resources>

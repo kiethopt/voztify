@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nhom2.voztify.Class.Track;
@@ -34,9 +35,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
 
     public TrackAdapter(Context context, List<Track> tracks, OnItemClickListener onItemClickListener) {
         this.context = context;
-        this.tracks = tracks;
+        this.tracks = tracks != null ? tracks : new ArrayList<>();
         this.onItemClickListener = onItemClickListener;
     }
+
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -110,8 +112,9 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return tracks.size();
+        return (tracks != null) ? tracks.size() : 0;
     }
+
     public static void savePreferences(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();

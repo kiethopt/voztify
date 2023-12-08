@@ -15,6 +15,7 @@ import java.util.List;
 
 import nhom2.voztify.Class.Album;
 import nhom2.voztify.Class.Artist;
+import nhom2.voztify.Class.Track;
 
 public class SearchResultAdapter extends BaseAdapter {
     private Context context;
@@ -52,22 +53,46 @@ public class SearchResultAdapter extends BaseAdapter {
         TextView textView = convertView.findViewById(R.id.text_view);
 
         if (result.isArtist()) {
+            // Xử lý nếu là nghệ sĩ
             Artist artist = result.getArtist();
             Picasso.get().load(artist.getPicture()).into(imageView);
             textView.setText(artist.getName());
-        } else {
+        } else if (result.isAlbum()) {
+            // Xử lý nếu là album
             Album album = result.getAlbum();
-            Picasso.get().load(album.getCover()).into(imageView);
-            textView.setText(album.getTitle());
+            if (album != null && album.getCover() != null) {
+                Picasso.get().load(album.getCover()).into(imageView);
+                textView.setText(album.getTitle());
+            }
+        } else if (result.isTrack()) {
+            // Xử lý nếu là track
+            Track track = result.getTrack();
+            if (track != null) {
+                // Sử dụng ảnh đại diện của album cho track hoặc ảnh mặc định nếu album là null
+                String imageUrl = (track.getAlbum() != null && track.getAlbum().getCover() != null)
+                        ? track.getAlbum().getCover()
+                        : "url_to_default_image"; // Thay "url_to_default_image" bằng URL hợp lý
+                Picasso.get().load(imageUrl).into(imageView);
+                // Đặt tiêu đề track và tên nghệ sĩ (nếu có)
+                String trackInfo = track.getTitle() + (track.getArtist() != null ? " - " + track.getArtist().getName() : "");
+                textView.setText(trackInfo);
+            }
         }
 
         convertView.setOnClickListener(v -> {
-            SearchResult searchResult = results.get(position);
-            if (searchResult.isArtist()) {
-                // Existing code for Artist
-            } else {
+            if (result.isArtist()) {
+                Intent intent = new Intent(context, ArtistDetailActivity.class);
+                intent.putExtra("artist", result.getArtist());
+                context.startActivity(intent);
+            } else if (result.isAlbum()) {
                 Intent intent = new Intent(context, AlbumDetailActivity.class);
-                intent.putExtra("album", searchResult.getAlbum());
+                intent.putExtra("album", result.getAlbum());
+                context.startActivity(intent);
+            } else if (result.isTrack()) {
+                // Xử lý khi track được click
+                Track selectedTrack = result.getTrack();
+                Intent intent = new Intent(context, TrackDetailActivity.class);
+                intent.putExtra("track", selectedTrack);
                 context.startActivity(intent);
             }
         });

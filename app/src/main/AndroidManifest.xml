@@ -23,6 +23,9 @@
         android:theme="@style/Theme.Voztify"
         tools:targetApi="31">
         <activity
+            android:name=".TrackDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ActivityUpdatePlaylist"
             android:exported="false" />
         <activity
