@@ -166,6 +166,8 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                         songForUList.add(songForU);
 
                     }
+                    songOfPlaylistAdapter.notifyDataSetChanged();
+
 
                 }
 
