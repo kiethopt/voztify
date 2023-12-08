@@ -179,7 +179,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                 if (!playlistName.isEmpty()) {
                     Intent updateIntent = new Intent(PlaylistDetailActivity.this, ActivityUpdatePlaylist.class);
                     updateIntent.putExtra("playlistNameToUpdate", playlistName);
-                    startActivity(updateIntent);
+                    startActivityForResult(updateIntent, 1);  // Start the activity for result
                 } else {
                     Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist name", Toast.LENGTH_SHORT).show();
                 }

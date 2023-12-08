@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import nhom2.voztify.Class.History;
+import nhom2.voztify.Class.Track;
 
 public class HistoryFragment extends Fragment {
 
@@ -56,7 +59,12 @@ public class HistoryFragment extends Fragment {
 
         // Initialize the data list and the adapter
         recentlyPlayedList = new ArrayList<>();
-        recentlyPlayedAdapter = new RecentlyPlayedAdapter(getActivity(), recentlyPlayedList);
+        recentlyPlayedAdapter = new RecentlyPlayedAdapter(getActivity(), recentlyPlayedList, new RecentlyPlayedAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        });
         rvRecentlyPlayed.setAdapter(recentlyPlayedAdapter);
 
 
@@ -67,10 +75,6 @@ public class HistoryFragment extends Fragment {
 
         return view;
     }
-
-
-
-
 
 
 

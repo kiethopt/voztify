@@ -1,5 +1,6 @@
 package nhom2.voztify;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,12 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
 
     private Context context;
     private List<History> historyList;
+    private OnItemClickListener onItemClickListener;
 
-    public RecentlyPlayedAdapter(Context context, List<History> historyList) {
+    public RecentlyPlayedAdapter(Context context, List<History> historyList, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.historyList = historyList;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -34,8 +37,14 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
         return new ViewHolder(itemView);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         History history = historyList.get(position);
 
         holder.titleTextView.setText(history.getTitle());
@@ -45,6 +54,15 @@ public class RecentlyPlayedAdapter extends RecyclerView.Adapter<RecentlyPlayedAd
 
         String imgUrl =  "https://e-cdns-images.dzcdn.net/images/cover" + "/" + history.getImageUrl() + "/120x120-000000-80-0-0.jpg";
         Picasso.get().load(imgUrl).into(holder.imageView);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, position);
+                }
+            }
+        });
     }
 
     @Override
