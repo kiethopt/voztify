@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,16 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-import nhom2.voztify.Api.DZService;
-import nhom2.voztify.Api.DeezerService;
 import nhom2.voztify.Class.Track;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class TrackDetailActivity extends AppCompatActivity {
     ImageView trackImage;
@@ -72,6 +66,7 @@ public class TrackDetailActivity extends AppCompatActivity {
             public void onTrackClick(Track selectedTrack) {
                 Intent intent = new Intent(TrackDetailActivity.this, PlayMusicActivity.class);
                 intent.putExtra("Track", selectedTrack);
+                intent.putExtra("TracksList", selectedTrack);
                 startActivity(intent);
             }
         });
