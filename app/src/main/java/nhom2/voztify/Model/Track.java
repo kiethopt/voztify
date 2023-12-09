@@ -119,6 +119,8 @@ public class Track implements Serializable {
     public static class Artist implements Serializable {
         @SerializedName("name")
         private String name;
+        public Artist() {
+        }
 
         public String getName() {
             return name;
@@ -129,5 +131,60 @@ public class Track implements Serializable {
         }
     }
 
+    public static class Album implements Serializable {
+        @SerializedName("id")
+        private String id;
+        @SerializedName("title")
+        private String title;
+        @SerializedName("cover")
+        private String cover;
+        @SerializedName("cover_medium")
+        private String coverMedium;
+        @SerializedName("md5_image")
+        private String md5Image;
+
+        public Album() {
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getCover() {
+            return cover;
+        }
+
+        public void setCover(String cover) {
+            this.cover = cover;
+        }
+
+        public String getCover_medium() {
+            return coverMedium;
+        }
+
+        public void setCoverMedium(String coverMedium) {
+            this.coverMedium = coverMedium;
+        }
+
+        public String getMd5Image() {
+            return md5Image;
+        }
+
+        public void setMd5Image(String md5Image) {
+            this.md5Image = md5Image;
+        }
+    }
 }
 

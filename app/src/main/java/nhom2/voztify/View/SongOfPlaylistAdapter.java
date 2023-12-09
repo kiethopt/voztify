@@ -1,6 +1,7 @@
 package nhom2.voztify.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.List;
 
-import nhom2.voztify.Model.SongForU;
+import nhom2.voztify.Model.Track;
 import nhom2.voztify.R;
 
 public class SongOfPlaylistAdapter extends RecyclerView.Adapter<SongOfPlaylistAdapter.ViewHolder> {
-    private List<SongForU> songList;
+    private List<Track> songList;
     private Context context;
 
-    public SongOfPlaylistAdapter(Context context, List<SongForU> songList) {
+    public SongOfPlaylistAdapter(Context context, List<Track> songList) {
         this.context = context;
         this.songList = songList;
     }
@@ -36,14 +38,26 @@ public class SongOfPlaylistAdapter extends RecyclerView.Adapter<SongOfPlaylistAd
 
     @Override
     public void onBindViewHolder(@NonNull SongOfPlaylistAdapter.ViewHolder holder, int position) {
-        SongForU songForU = songList.get(position);
+        Track songForU = songList.get(position);
 
         holder.titleTextView.setText(songForU.getTitle());
-        holder.textViewArtist.setText(songForU.getArtist());
+        holder.textViewArtist.setText(songForU.getArtist().getName());
 
         // Load the image into the ImageView using Picasso (you need to add the Picasso library to your dependencies)
-        String imgUrl =  "https://e-cdns-images.dzcdn.net/images/cover" + "/" + songForU.getImageUrl() + "/120x120-000000-80-0-0.jpg";
+        String imgUrl =  "https://e-cdns-images.dzcdn.net/images/cover" + "/" + songForU.getMd5_image() + "/120x120-000000-80-0-0.jpg";
         Picasso.get().load(imgUrl).into(holder.imageView);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = holder.itemView.getContext();
+
+                Intent intent = new Intent(context, PlayMusicActivity.class);
+                intent.putExtra("Track", songForU);
+                intent.putExtra("TracksList", (Serializable) songList);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

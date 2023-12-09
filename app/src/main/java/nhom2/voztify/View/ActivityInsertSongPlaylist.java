@@ -1,14 +1,14 @@
 package nhom2.voztify.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,10 +20,9 @@ import java.util.List;
 
 import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
-import nhom2.voztify.Model.SongForU;
+import nhom2.voztify.Controller.TrackResponse;
 import nhom2.voztify.Model.Track;
 import nhom2.voztify.R;
-import nhom2.voztify.Controller.TrackResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,13 +115,7 @@ public class ActivityInsertSongPlaylist extends AppCompatActivity {
             DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("users")
                     .child(userId).child("playlists").child(playlistId).child("song of playlist");
 
-
-
-            SongForU trackData = new SongForU(
-                    track.getTitle(),
-                    track.getArtist().getName(),
-                    track.getMd5_image()
-            );
+            Track trackData = track;
 
             // Save track information to the playlist
             playlistRef.child(trackId).setValue(trackData);

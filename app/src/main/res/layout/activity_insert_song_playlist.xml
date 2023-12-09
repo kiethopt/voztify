@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
-    tools:context=".View.ActivityInsertSongPlaylist">
+    tools:context=".View.ActivityInsertSongPlaylist"
+    android:background="#040D12">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +17,8 @@
             android:hint="Search by Artist or Song"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:layout_marginEnd="8dp"/>
 
         <androidx.recyclerview.widget.RecyclerView

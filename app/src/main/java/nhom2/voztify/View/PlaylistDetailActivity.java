@@ -1,12 +1,5 @@
 package nhom2.voztify.View;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -25,6 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,17 +35,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import nhom2.voztify.Model.SongForU;
+import nhom2.voztify.Model.Track;
 import nhom2.voztify.R;
 
 public class PlaylistDetailActivity extends AppCompatActivity {
     private ImageView imgPlaylistDetail;
     private TextView tvPlaylistDetailName;
     private TextView tvYourNameDetail;
-    private ImageButton imgButtonShowDialog;
+    private ImageButton imgButtonShowDialog, imgButtonPlay;
+
     LinearLayout layoutAddSong;
     private Toolbar toolbar;
     private String playlistId;
@@ -55,7 +57,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private SongOfPlaylistAdapter songOfPlaylistAdapter;
-    private List<SongForU> songForUList;
+    private List<Track> songForUList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         LinearLayout addSongLayout = findViewById(R.id.layout_add_song);
 
         ImageButton imgBtnAddSong = findViewById(R.id.img_btn_add_song_playlist);
-
+        imgButtonPlay = findViewById(R.id.imageButton3);
         imgPlaylistDetail = findViewById(R.id.img_playlist_detail);
         tvPlaylistDetailName = findViewById(R.id.tv_playlist_detail_name);
         tvYourNameDetail = findViewById(R.id.tv_your_name_detail);
@@ -137,6 +139,16 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
         }
 
+        imgButtonPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PlaylistDetailActivity.this, PlayMusicActivity.class);
+                intent.putExtra("Track", songForUList.get(0));
+                intent.putExtra("TracksList", (Serializable) songForUList);
+                startActivity(intent);
+            }
+        });
+
 
 
         recyclerView = findViewById(R.id.recycler_view_song_detail);
@@ -172,7 +184,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
                     // Iterate through the playlists
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        SongForU songForU = snapshot.getValue(SongForU.class);
+                        Track songForU = snapshot.getValue(Track.class);
                         songForUList.add(songForU);
 
                     }
