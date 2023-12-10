@@ -99,22 +99,22 @@
             android:layout_marginRight="20dp"
             android:textColor="#FFFFFF" />
 
-        <ImageView
-            android:id="@+id/followersCountImageView"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
-            android:src="@drawable/baseline_remove_red_eye_24"
-            android:background="@drawable/frame_border" />
+<!--        <ImageView-->
+<!--            android:id="@+id/followersCountImageView"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:src="@drawable/baseline_remove_red_eye_24"-->
+<!--            android:background="@drawable/frame_border" />-->
 
-        <!-- Followers count -->
-        <TextView
-            android:id="@+id/followersCountTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:text="Following" />
+<!--        &lt;!&ndash; Followers count &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/followersCountTextView"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:text="Following" />-->
 
     </LinearLayout>
 

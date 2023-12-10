@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/black"
+    android:background="@drawable/intro2"
     tools:context=".View.Register">
 
     <ImageView
@@ -26,8 +26,9 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/button_background_1"
         android:text="Sign up free"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingTop="12dp"
@@ -42,9 +43,10 @@
         android:layout_marginEnd="25dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/black"
+        android:background="@drawable/button_background_1"
         android:text="Log in"
-        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textColor="#000000"
         android:textSize="16sp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"

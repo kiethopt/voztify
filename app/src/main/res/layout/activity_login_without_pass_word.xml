@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@drawable/intro6"
     tools:context=".View.LoginWithoutPassWordActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Log in without password"
+            android:text="LOG IN WITHOUT PASSWORD"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>

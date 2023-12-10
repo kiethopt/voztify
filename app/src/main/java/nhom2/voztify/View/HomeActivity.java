@@ -92,11 +92,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.menu_notification) {
-            // Xử lý khi nhấn vào mục Notification
-            // ...
-            return true;
-        } else if (itemId == R.id.menu_setting) {
+        if (itemId == R.id.menu_setting) {
             // Xử lý khi nhấn vào mục SettingActivity
             startActivity(new Intent(this, SettingActivity.class));
             return true;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@drawable/intro3"
     android:orientation="vertical"
     android:gravity="top"
     tools:context=".View.SignUp">
@@ -13,6 +13,7 @@
         android:id="@+id/toolbar3"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginBottom="30dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <TextView
@@ -20,9 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Create account"
+            android:text="SIGN UP"
+            android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
@@ -33,7 +35,7 @@
         android:layout_marginEnd="20dp"
         android:text="What's your email?"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <EditText
@@ -59,7 +61,7 @@
         android:layout_marginEnd="20dp"
         android:text="What's your phone number?"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <EditText
@@ -87,7 +89,7 @@
         android:layout_marginEnd="20dp"
         android:text="Create a password"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <EditText
@@ -113,7 +115,7 @@
         android:layout_marginEnd="20dp"
         android:text="Confirm your password"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <EditText
@@ -140,7 +142,7 @@
         android:layout_marginEnd="20dp"
         android:text="What's your date of birth?"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -175,7 +177,7 @@
         android:layout_marginEnd="20dp"
         android:text="What's your gender"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <Spinner
@@ -199,7 +201,7 @@
         android:layout_marginEnd="20dp"
         android:text="What's your name?"
         android:textColor="#FFFFFF"
-        android:textSize="20dp"
+        android:textSize="15dp"
         android:textStyle="bold" />
 
     <EditText

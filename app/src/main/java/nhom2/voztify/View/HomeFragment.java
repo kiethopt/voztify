@@ -246,7 +246,7 @@ public class HomeFragment extends Fragment {
                     bioTextView.setText(dataSnapshot.child("bio").getValue(String.class));
 
                     // Hiển thị ngày tham gia
-                    dateJoinedTextView.setText(getFormattedDateJoined(FirebaseAuth.getInstance().getCurrentUser().getMetadata().getCreationTimestamp()));
+                    dateJoinedTextView.setText("Participation date: " + getFormattedDateJoined(FirebaseAuth.getInstance().getCurrentUser().getMetadata().getCreationTimestamp()));
 
                     // Load the image URL directly from Firebase and display
                     String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
