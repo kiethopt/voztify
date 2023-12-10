@@ -63,6 +63,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
+    // Khai báo views và adapters
     private RecyclerView recyclerViewTopRadio;
     private RadioAdapter radioAdapter;
     private RecyclerView recyclerViewTopArtist, recyclerViewTopTracks;
@@ -98,6 +99,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Khởi tạo views và RecyclerViews
         emailTextView = view.findViewById(R.id.emailTextView);
         nameTextView = view.findViewById(R.id.nameTextView);
         dateJoinedTextView = view.findViewById(R.id.dateJoinedTextView);
@@ -140,7 +142,6 @@ public class HomeFragment extends Fragment {
         fetchTopRadioGenres();
         fetchTracks();
 
-
         // Xóa dữ liệu cũ từ SharedPreferences
         //clearSharedPreferences();
 
@@ -148,7 +149,6 @@ public class HomeFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             displayUserInfo(user.getUid());
-
             // Log the saved image URI for debugging
             String savedImageUri = loadImageUriFromSharedPreferences(user.getUid());
                 Log.d("HomeFragment", "Saved Image URI: " + savedImageUri);
@@ -174,7 +174,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        // Yêu cầu quyền lưu trữ
         if (requestCode == REQUEST_CODE_PERMISSION) {
             // Handle the result of the permission request
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -195,6 +195,7 @@ public class HomeFragment extends Fragment {
 //    }
 
     private void openEditProfileActivity() {
+        //getActivity() lấy fragment hiện tại
         startActivityForResult(new Intent(getActivity(), EditProfileActivity.class), EDIT_PROFILE_REQUEST_CODE);
     }
 
@@ -208,7 +209,6 @@ public class HomeFragment extends Fragment {
             if (updatedProfileImage != null) {
                 // Load hình ảnh mới vào ImageView sử dụng Picasso hoặc Glide
                 Picasso.get().load(updatedProfileImage).into(profilePhoto);
-
                 // Lưu đường dẫn hình ảnh vào SharedPreferences
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
@@ -233,14 +233,17 @@ public class HomeFragment extends Fragment {
     }
 
     private void displayUserInfo(String userId) {
+        // Tạo tham chiếu đến nút "users" trong Firebase Realtime Database với userId là con của nút "users"
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-
+        // Thực hiện lắng nghe một lần duy nhất để đọc dữ liệu từ Firebase Realtime Database
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Kiểm tra xem có dữ liệu tồn tại hay không
                 if (dataSnapshot.exists()) {
+                    // Lấy tên người dùng từ nút "name" trong dữ liệu Firebase
                     userName = dataSnapshot.child("name").getValue(String.class);
-
+                    // Hiển thị thông tin người dùng trên giao diện
                     emailTextView.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
                     nameTextView.setText(userName);
                     bioTextView.setText(dataSnapshot.child("bio").getValue(String.class));
@@ -248,7 +251,7 @@ public class HomeFragment extends Fragment {
                     // Hiển thị ngày tham gia
                     dateJoinedTextView.setText("Participation date: " + getFormattedDateJoined(FirebaseAuth.getInstance().getCurrentUser().getMetadata().getCreationTimestamp()));
 
-                    // Load the image URL directly from Firebase and display
+                    // Lấy URL hình ảnh trực tiếp từ Firebase và hiển thị nó sử dụng thư viện Picasso
                     String profileImageUrl = dataSnapshot.child("profileImageUrl").getValue(String.class);
                     if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                         Picasso.get().load(profileImageUrl).into(profilePhoto);
@@ -264,12 +267,14 @@ public class HomeFragment extends Fragment {
     }
 
     private String getFormattedDateJoined(long timestamp) {
+        // Định dạng ngày tham gia sử dụng SimpleDateFormat với định dạng "dd/MM/yyyy"
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        // Sử dụng định dạng để chuyển đổi timestamp thành chuỗi ngày tham gia
         return sdf.format(new Date(timestamp));
     }
 
     private void saveImageUriToSharedPreferences(String userId, String imageUri) {
-        // Lưu đường dẫn ảnh vào SharedPreferences với key là userId
+        /// Lưu đường dẫn ảnh vào SharedPreferences với key là "profileImageUri_" + userId
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("profileImageUri_" + userId, imageUri);
@@ -277,29 +282,36 @@ public class HomeFragment extends Fragment {
     }
 
     private String loadImageUriFromSharedPreferences(String userId) {
-        // Đọc đường dẫn ảnh từ SharedPreferences với key là userId
+        // Đọc đường dẫn ảnh từ SharedPreferences với key là "profileImageUri_" + userId
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        // Trả về đường dẫn ảnh hoặc null nếu không tìm thấy
         return sharedPreferences.getString("profileImageUri_" + userId, null);
     }
 
-    // ==============Top Track =================
+    // =============================== TOP TRACKS ===================================================
     private void fetchTracks() {
+        // Tạo một đối tượng DZService từ DeezerService
         DZService service = DeezerService.getService();
-        Call<JsonObject> call = service.getTopTracks(); // Assume JsonObject as the response type
-
+        Call<JsonObject> call = service.getTopTracks(); // Giả sử JsonObject là kiểu dữ liệu phản hồi
+        // Gọi API để lấy danh sách Top Tracks
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // Kiểm tra xem cuộc gọi API có thành công không và phản hồi có dữ liệu không
                 if (response.isSuccessful() && response.body() != null) {
+                    // Lấy dữ liệu JSON từ phản hồi
                     JsonObject jsonResponse = response.body();
-
+                    // Kiểm tra xem JSON có chứa trường "tracks" không
                     if (jsonResponse.has("tracks")) {
+                        // Lấy đối tượng JSON chứa danh sách các track
                         JsonObject tracksObject = jsonResponse.getAsJsonObject("tracks");
-
+                        // Chuyển đổi JSON thành đối tượng TrackResponse bằng Gson
                         TrackResponse trackData = new Gson().fromJson(tracksObject, TrackResponse.class);
+                        // Lấy danh sách các Track từ đối tượng TrackResponse
                         trackList = trackData.getTracks();
+                        // Method Cập nhật RecyclerView hiển thị danh sách Track
                         updateTrackListView(trackList);
-
+                        // Đặt bố cục của RecyclerView là LinearLayoutManager theo chiều ngang
                         recyclerViewTopTracks.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     } else {
                         Log.e("TrackFragment", "Response does not contain 'tracks' field");
@@ -315,6 +327,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
+                // Xử lý khi có lỗi trong quá trình gọi API
                 Log.e("TrackFragment", "Error fetching tracks: " + t.getMessage());
             }
         });
@@ -323,39 +336,48 @@ public class HomeFragment extends Fragment {
 
 
     private void updateTrackListView(List<Track> tracks) {
-
+        // Đảo ngược danh sách các Track
         Collections.reverse(tracks);
+        // Tạo adapter cho RecyclerView sử dụng danh sách các Track và thiết lập sự kiện khi một Track được chọn
         tracksAdapter = new TracksAdapter(context, tracks, new TracksAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                // Xử lý sự kiện khi một Track được chọn
                 Track track = tracks.get(position);
-
+                // Tạo Intent để mở PlayMusicActivity và chuyển dữ liệu Track và danh sách Track
                 Intent intent = new Intent(getActivity(), PlayMusicActivity.class);
                 intent.putExtra("Track", track);
                 intent.putExtra("TracksList", (Serializable) trackList);
+                // Gọi startActivityForResult để có thể nhận kết quả từ PlayMusicActivity
                 startActivityForResult(intent, REQUEST_CODE_PLAY_MUSIC);
             }
         });
 
         recyclerViewTopTracks.setAdapter(tracksAdapter);
     }
-    //===================top radio================
+    //======================================================================================================
+    //==================================== TOP RADIO ===================================================================
     private void loadTopRadio() {
+        // Tạo đối tượng DZService từ DeezerService
         DZService dzService = DeezerService.getService();
+        // Gọi API để lấy danh sách Top Radios
         Call<DeezerResponse> call = dzService.getTopRadios();
 
         call.enqueue(new Callback<DeezerResponse>() {
             @Override
+            // Xử lý khi cuộc gọi API thành công
             public void onResponse(Call<DeezerResponse> call, Response<DeezerResponse> response) {
                 if (response.isSuccessful()) {
+                    // Lấy đối tượng DeezerResponse từ phản hồi
                     DeezerResponse deezerResponse = response.body();
+                    // Kiểm tra xem deezerResponse có khác null không
                     if (deezerResponse != null) {
-                        // Hiển thị danh sách Top Radio trong RecyclerView
+                        // Lấy danh sách Top Radios từ deezerResponse
                         List<DeezerRadio> topRadios = deezerResponse.getData();
 
-                        // Reverse the order of the list
+                        // Đảo ngược thứ tự của danh sách
                         Collections.reverse(topRadios);
-
+                        // Tạo adapter cho RecyclerView và đặt adapter cho RecyclerView
                         radioAdapter = new RadioAdapter(getContext(), topRadios);
                         recyclerViewTopRadio.setAdapter(radioAdapter);
                     }
@@ -369,19 +391,25 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
-    // ============================== TOP GENRES RADIO =================================
+    //======================================================================================================
+    // ============================== TOP GENRES RADIO ===================================================================
+    // Phương thức này gọi API để lấy danh sách Top Genres Radio từ Deezer
     private void fetchTopRadioGenres() {
+        // Sử dụng một luồng mới để thực hiện cuộc gọi mạng, tránh chặn luồng chính
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    // Tạo URL cho API Deezer Radio
                     URL url = new URL("https://api.deezer.com/radio");
+                    // Mở kết nối tới URL
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-
+                    // Lấy mã phản hồi từ kết nối
                     int responseCode = conn.getResponseCode();
+                    // Kiểm tra xem kết nối thành công (HTTP_OK) hay không
                     if (responseCode == HttpURLConnection.HTTP_OK) {
+                        // Đọc dữ liệu từ InputStream
                         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                         String inputLine;
                         StringBuilder response = new StringBuilder();
@@ -390,10 +418,10 @@ public class HomeFragment extends Fragment {
                         }
                         in.close();
 
-                        // Parse JSON and get top radio genres
+                        // Gọi phương thức parseTopRadioGenres để chuyển đổi dữ liệu JSON thành danh sách TopRadioGenre
                         List<TopRadioGenre> topRadioGenres = parseTopRadioGenres(response.toString());
 
-                        // Update UI on the main thread
+                        // Cập nhật giao diện người dùng trên luồng chính
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -406,20 +434,25 @@ public class HomeFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start(); // Khởi động luồng mới
     }
-
+    // Phương thức này chuyển đổi dữ liệu JSON thành danh sách các đối tượng TopRadioGenre
     private List<TopRadioGenre> parseTopRadioGenres(String json) {
         List<TopRadioGenre> topRadioGenres = new ArrayList<>();
         try {
+            // Tạo đối tượng JSONObject từ chuỗi JSON
             JSONObject jsonObject = new JSONObject(json);
+            // Lấy mảng dữ liệu có tên là "data" từ đối tượng JSON
             JSONArray data = jsonObject.getJSONArray("data");
+            // Lặp qua mỗi đối tượng trong mảng data
             for (int i = data.length() - 1; i >= 0; i--) {
+                // Lấy đối tượng JSON tại vị trí i
                 JSONObject radioGenreObject = data.getJSONObject(i);
+                // Lấy thông tin cần thiết (id, title, pictureUrl) từ đối tượng JSON
                 String id = radioGenreObject.getString("id");
                 String title = radioGenreObject.getString("title");
                 String pictureUrl = radioGenreObject.getString("picture");
-
+                // Tạo đối tượng TopRadioGenre và thêm vào danh sách
                 TopRadioGenre topRadioGenre = new TopRadioGenre(id, title, pictureUrl);
                 topRadioGenres.add(topRadioGenre);
             }
@@ -430,22 +463,30 @@ public class HomeFragment extends Fragment {
     }
 
 
-    // ================================TOP GENRE ARTIST===============================================
+    // ================================ TOP GENRE ARTIST ================================================================
     private void fetchArtists() {
+        // Khởi tạo một đối tượng DZService từ DeezerService
         DZService service = DeezerService.getService();
+        // Gọi API để lấy danh sách các nghệ sĩ hàng đầu
         Call<JsonObject> call = service.getTopArtists();
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                // Kiểm tra xem response có thành công và có dữ liệu không
                 if (response.isSuccessful() && response.body() != null) {
+                    // Chuyển đổi response thành đối tượng JsonObject
                     JsonObject jsonResponse = response.body();
-
+                    // Kiểm tra xem có trường "artists" trong JsonObject không
                     if (jsonResponse.has("artists")) {
+                        // Lấy đối tượng Json chứa danh sách nghệ sĩ
                         JsonObject tracksObject = jsonResponse.getAsJsonObject("artists");
-
+                        // Chuyển đối tượng Json thành đối tượng ArtistResponse sử dụng Gson
                         ArtistResponse artistData = new Gson().fromJson(tracksObject, ArtistResponse.class);
+                        // Lấy danh sách nghệ sĩ từ đối tượng ArtistResponse
                         artistList = artistData.getArtists();
+                        // Cập nhật giao diện danh sách nghệ sĩ
                         updateListView(artistList);
+                        // Thiết lập layout manager cho RecyclerView hiển thị danh sách nghệ sĩ
                         recyclerViewTopArtist.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
                     } else {
@@ -466,30 +507,32 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    // Cập nhật giao diện danh sách nghệ sĩ trong RecyclerView
     private void updateListView(List<Artist> artists) {
+        // Đảo ngược danh sách nghệ sĩ để hiển thị từ mới nhất đến cũ nhất
         Collections.reverse(artists);
+        // Khởi tạo Adapter và thiết lập OnItemClickListener cho RecyclerView
         artistAdapter = new ArtistAdapter(getContext(), artists, new ArtistAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Artist artist = artists.get(position);
-
+                // Tạo Intent để mở Activity chi tiết nghệ sĩ và chuyển thông tin nghệ sĩ qua Intent
                 Intent intent = new Intent(getActivity(), ArtistDetailActivity.class);
                 intent.putExtra("artist", artist);
                 startActivity(intent);
             }
         });
-
+        // Thiết lập Adapter cho RecyclerView
         recyclerViewTopArtist.setAdapter(artistAdapter);
     }
-    // ===============================================================================
+    // =================================================================================================================
 
     @Override
     public void onResume() {
         super.onResume();
-
-
-        // Load the image URI from SharedPreferences each time the fragment is resumed
+        // Khi Fragment được resumed, ta load đường dẫn ảnh từ SharedPreferences
         String savedImageUri = loadImageUriFromSharedPreferences(userId);
+        // Nếu có đường dẫn ảnh đã lưu, ta sử dụng thư viện Picasso để load ảnh vào ImageView (profilePhoto)
         if (savedImageUri != null && !savedImageUri.isEmpty()) {
             Picasso.get().load(savedImageUri).into(profilePhoto);
         }
