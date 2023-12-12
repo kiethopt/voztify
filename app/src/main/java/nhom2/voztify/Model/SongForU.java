@@ -3,7 +3,7 @@ package nhom2.voztify.Model;
 public class SongForU {
     private String title;
     private String artist;
-    private String imageUrl;  // Add this field for the image URL
+    private String imageUrl;
     private Object timestamp;
 
     // Empty constructor for Firebase

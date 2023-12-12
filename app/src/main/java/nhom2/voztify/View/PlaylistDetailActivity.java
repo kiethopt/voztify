@@ -212,8 +212,9 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         createLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(PlaylistDetailActivity.this, "Create is clicked", Toast.LENGTH_SHORT).show();
-            }
+                Intent intent = new Intent(PlaylistDetailActivity.this, ActivityInsertSongPlaylist.class);
+                intent.putExtra("playlistId", playlistId);  // Pass the playlistId to the new activity
+                startActivity(intent);            }
         });
         editLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,16 +233,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                // Get the playlist ID from the intent
-//                playlistId = getIntent().getStringExtra("playlistId");
-//
-//                if (playlistId != null && !playlistId.isEmpty()) {
-//                    // Pass the playlist ID to the delete function
-//                    deletePlaylistFromFirebase(playlistId);
-//                } else {
-//                    // Handle the case when the playlist ID is null or empty
-//                    Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist ID", Toast.LENGTH_SHORT).show();
-//                }
                 showDeleteConfirmationDialog();
                 dialog.dismiss();
             }
@@ -273,33 +264,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         });
         builder.show();
     }
-    //
-    private void getPlaylistIdAndDelete() {
-        if (currentUser != null) {
-            String userId = currentUser.getUid();
 
-            DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance().getReference("users")
-                    .child(userId).child("playlists");
-
-            // Check if userPlaylistRef is not null
-            if (userPlaylistRef != null) {
-                // Get the playlist ID from the reference
-                String playlistId = getIntent().getStringExtra("playlistId");
-
-                if (playlistId != null && !playlistId.isEmpty()) {
-                    // Pass the playlist ID to the delete function
-                    deletePlaylistFromFirebase(playlistId);
-                } else {
-                    // Handle the case when the playlist ID is null or empty
-                    Toast.makeText(PlaylistDetailActivity.this, "Invalid playlist ID", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                // Handle the case when userPlaylistRef is null
-                Toast.makeText(PlaylistDetailActivity.this, "User playlist reference is null", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    //
     private void deletePlaylistFromFirebase(String playlistId) {
         DatabaseReference userPlaylistRef = FirebaseDatabase.getInstance().getReference("users")
                 .child(currentUser.getUid()).child("playlists");
@@ -337,13 +302,11 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                 String updatedPlaylistName = data.getStringExtra("updatedPlaylistName");
                 String yourName = data.getStringExtra("yourName");
 
-
-                // Update your UI or perform any additional logic with the updated information
-                // For example, you can update the playlist name TextView
-                tvPlaylistDetailName.setText(updatedPlaylistName, TextView.BufferType.valueOf(yourName));
+                tvPlaylistDetailName.setText(updatedPlaylistName);
             }
         }
     }
+
 
     @Override
     public void onResume() {
