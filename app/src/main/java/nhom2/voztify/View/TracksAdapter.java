@@ -29,7 +29,7 @@ public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder
     private List<Track> tracks;
     private OnItemClickListener onItemClickListener;
     private static int backgroundColor = Color.parseColor("#040D12");
-    private static int textGravity = Gravity.START;
+    private static int textGravity = Gravity.CENTER;
     private static float textSize = 20;
     private static int songArtistVisibility = View.VISIBLE;
 

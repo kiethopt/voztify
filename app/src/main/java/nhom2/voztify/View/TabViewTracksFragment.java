@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,9 @@ import java.util.List;
 
 import nhom2.voztify.Api.DZService;
 import nhom2.voztify.Api.DeezerService;
+import nhom2.voztify.Controller.TrackResponse;
 import nhom2.voztify.Model.Track;
 import nhom2.voztify.R;
-import nhom2.voztify.Controller.TrackResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,6 +104,10 @@ public class TabViewTracksFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE_PLAY_MUSIC);
             }
         });
+
+        TrackAdapter.updateTextSize(getContext(),18);
+        TrackAdapter.updateTextGravity(getContext(), Gravity.START);
+        TrackAdapter.updateSongArtistVisibility(getContext(), View.VISIBLE);
 
         recyclerView.setAdapter(trackAdapter);
     }

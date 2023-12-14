@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -352,6 +353,10 @@ public class HomeFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE_PLAY_MUSIC);
             }
         });
+
+        TracksAdapter.updateTextSize(getContext(),20);
+        TracksAdapter.updateTextGravity(getContext(), Gravity.CENTER);
+        TracksAdapter.updateSongArtistVisibility(getContext(), View.VISIBLE);
 
         recyclerViewTopTracks.setAdapter(tracksAdapter);
     }
